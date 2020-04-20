@@ -141,6 +141,10 @@ _deps
 # External projects
 *-prefix/
 
+# Visual Studio Build
+x64/
+.vs/
+
 # End of https://www.gitignore.io/api/c++,cmake,clion
 
 # Don't track database files.
