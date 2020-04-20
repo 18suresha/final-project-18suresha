@@ -3,6 +3,7 @@
 #include <cinder/app/App.h>
 #include <cinder/app/RendererGl.h>
 #include <opencv2/opencv.hpp>
+#include <opencv2/features2d.hpp>
 
 #include "my_app.h"
 #include <vector>
@@ -25,15 +26,19 @@ namespace myapp {
         if (!cap.isOpened()) {
             return;
         }
-
+        int counter = 0;
         while (1) {
             Mat frame;
             cap >> frame;
             std::vector<KeyPoint> keypoints;
-            FAST(frame, keypoints, 0, false);
-            if (keypoints.size() > 0) {
+            Mat feature_frame;
+            Ptr<FeatureDetector> detector = ORB::create();
+            detector->detectAndCompute(frame, feature_frame, keypoints, noArray(), false);
+            drawKeypoints(frame, keypoints, feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+            /*if (keypoints.size() > 0) {
                 std::cout << keypoints.size() << std::endl;
-            }
+            }*/
+            imwrite("assets/" + std::to_string(counter++) + ".png", feature_frame);
             imshow("Frame", frame);
 
             if (waitKey(30) >= 0) {

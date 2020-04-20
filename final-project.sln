@@ -7,6 +7,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "final-project", "final-proj
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test-final-project", "test-final-project\test-final-project.vcxproj", "{95EF67CC-C58C-4EFD-BF05-96D958DCFECF}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7DD40D67-C4AD-498E-885F-81105A1B1F64}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		DEVELOPMENT.md = DEVELOPMENT.md
+		README.md = README.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

@@ -4,6 +4,8 @@
 
 #include "catch.hpp"
 #include <cinder/Rand.h>
+#include <iostream>
+#include <filesystem>
 
 #include "mylibrary/example.h"
 

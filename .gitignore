@@ -145,6 +145,9 @@ _deps
 x64/
 .vs/
 
+# Images
+final-project/assets
+
 # End of https://www.gitignore.io/api/c++,cmake,clion
 
 # Don't track database files.
