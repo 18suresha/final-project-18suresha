@@ -147,6 +147,8 @@ x64/
 
 # Images
 final-project/assets
+test-final-project/assets
+openCV-python/assets
 
 # End of https://www.gitignore.io/api/c++,cmake,clion
 
