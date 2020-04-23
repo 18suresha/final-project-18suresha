@@ -6,11 +6,11 @@
 #include "cinder/gl/gl.h"
 #include <cinder/ImageIo.h>
 #include <cinder/Surface.h>
+#include <cinder/CinderImGui.h>
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/features2d.hpp>
 #include <vector>
-#include <iostream>
 // have to include windows.h after cinder headers b/c windows.h declares macros that conflict with code in cinder headers
 #include <windows.h>
 
@@ -18,7 +18,6 @@ namespace myapp {
 
 	using cinder::app::KeyEvent;
     using namespace cv;
-    using namespace Gdiplus;
 
     void TestKeyboardInput() {
         INPUT ip;
@@ -45,7 +44,14 @@ namespace myapp {
         SendInput(1, &ip1, sizeof(INPUT));
     }
 
-    void TestOpenCV() {
+    Mat FilterMat(const Mat& src_frame) {
+        Mat filter_frame;
+        // filter orange
+        inRange(src_frame, Scalar(0, 0, 0), Scalar(0, 165, 255), filter_frame);
+        return filter_frame;
+    }
+
+    void TestORB() {
         VideoCapture cap(0);
         if (!cap.isOpened()) {
             return;
@@ -54,18 +60,19 @@ namespace myapp {
         while (1) {
             Mat frame;
             cap >> frame;
-            cv::Size frame_size = frame.size();
+           /* cv::Size frame_size = frame.size();
             cv::Rect roi(frame_size.width / 4, frame_size.height / 6, 2 * frame_size.width / 3, 3 * frame_size.height / 4);
-            Mat cropped_frame = frame(roi);
+            Mat cropped_frame = frame(roi);*/
+            Mat filter_frame = FilterMat(frame);
             std::vector<KeyPoint> keypoints;
             Mat feature_frame;
             Ptr<FeatureDetector> detector = ORB::create();
-            detector->detectAndCompute(cropped_frame, feature_frame, keypoints, noArray(), false);
-            drawKeypoints(cropped_frame, keypoints, feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+            detector->detectAndCompute(filter_frame, feature_frame, keypoints, noArray(), false);
+            drawKeypoints(filter_frame, keypoints, feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
             /*if (keypoints.size() > 0) {
                 std::cout << keypoints.size() << std::endl;
             }*/
-            imwrite("assets/" + std::to_string(counter++) + ".png", feature_frame);
+            // imwrite("assets/" + std::to_string(counter++) + ".png", feature_frame);
             imshow("frame", feature_frame);
             //Sleep(1000);
             //destroyAllWindows();
@@ -80,17 +87,31 @@ namespace myapp {
 	MyApp::MyApp() { }
 	
 	void MyApp::setup() {
-        TestOpenCV();
-        TestKeyboardInput();
-		auto img = cinder::loadImage("assets/0.png");
-		mTex = cinder::gl::Texture2d::create(img);
+        // TestORB();
+        // TestKeyboardInput();
+		/*auto img = cinder::loadImage("assets/0.png");
+		mTex = cinder::gl::Texture2d::create(img);*/
+        ImGui::Initialize();
 	}
 
 	void MyApp::update() { }
 
 	void MyApp::draw() {
-		cinder::gl::clear();
-		cinder::gl::draw(mTex);
+		/*cinder::gl::clear();
+		cinder::gl::draw(mTex);*/
+        bool run_orb = false;
+        bool run_key_input = false;
+        if (ImGui::BeginMenu("Component to Run")) {
+            ImGui::MenuItem("ORB", nullptr, &run_orb);
+            ImGui::MenuItem("Keybaord Input", nullptr, &run_key_input);
+            ImGui::EndMenu();
+        }
+        if (run_orb) {
+            TestORB();
+        }
+        else if (run_key_input) {
+            TestKeyboardInput();
+        }
 	}
 
 	void MyApp::keyDown(KeyEvent event) { }

@@ -12,4 +12,10 @@
   - Identify finger movement
   - Configure IDE to follow Google C++ Style Guide
   - Create documentaion on how to set up project in Visual Studio
+
+- **4/22/20** Implemented Cinder-ImGui and orange color filtering in OpenCV
+  - Identify specific finger movement
+  - Configure IDE to follow Google C++ Style Guide
+  - Create documentaion on how to set up project in Visual Studio
+  - Modularize and improve code quality
 ---
