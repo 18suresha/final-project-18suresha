@@ -45,9 +45,10 @@ namespace myapp {
     }
 
     Mat FilterMat(const Mat& src_frame) {
-        Mat filter_frame;
+        Mat hsv_frame, filter_frame;
         // filter orange
-        inRange(src_frame, Scalar(0, 0, 0), Scalar(0, 165, 255), filter_frame);
+        cvtColor(src_frame, hsv_frame, COLOR_BGR2HSV);
+        inRange(hsv_frame, Scalar(13, 100, 100), Scalar(17, 255, 255), filter_frame);
         return filter_frame;
     }
 
