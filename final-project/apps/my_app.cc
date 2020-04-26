@@ -19,26 +19,28 @@ namespace myapp {
 	using cinder::app::KeyEvent;
     using namespace cv;
 
-    MyApp::MyApp() : engine_{} { }
+    MyApp::MyApp() : engine_ {} { }
 	
 	void MyApp::setup() {
-        ImGui::Initialize();
+		ImGui::Initialize();
 	}
 
-	void MyApp::update() { }
+	void MyApp::update() {
+		bool run_opencv = false;
+
+		if (ImGui::BeginMenu("Component to Run")) {
+			ImGui::MenuItem("ORB", nullptr, &run_opencv);
+			ImGui::EndMenu();
+		}
+
+		if (run_opencv) {
+			engine_.RunOpenCV();
+		}
+	}
 
 	void MyApp::draw() {
-        bool run_orb = false;
-        bool run_key_input = false;
-        if (ImGui::BeginMenu("Component to Run")) {
-            ImGui::MenuItem("ORB", nullptr, &run_orb);
-            ImGui::EndMenu();
-        }
-        if (run_orb) {
-            engine_.RunOpenCV();
-        }
 	}
 
-	void MyApp::keyDown(KeyEvent event) { }
+	void MyApp::keyDown(KeyEvent event) {}
 
 }  // namespace myapp

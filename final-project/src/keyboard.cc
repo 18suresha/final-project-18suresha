@@ -11,7 +11,7 @@ namespace mylibrary {
 	void Keyboard::SwitchTabsRight() {
         INPUT ip;
         INPUT ip1;
-        Sleep(5000);
+        Sleep(2000);
         // switch tabs
         ip.type = INPUT_KEYBOARD;
         ip.ki.wScan = 0;

@@ -2,6 +2,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/features2d.hpp>
+#include <chrono>
 #include <vector>
 
 #include "mylibrary/engine.h"
@@ -10,7 +11,7 @@ using namespace cv;
 
 namespace mylibrary {
 
-    Engine::Engine() : keyboard_{} {}
+    Engine::Engine() : analyze_video_{ false }, cap_ { 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() } {}
 
     Mat FilterMat(const Mat& src_frame) {
         Mat hsv_frame, filter_frame;
@@ -23,38 +24,46 @@ namespace mylibrary {
     }
 
 	void Engine::RunOpenCV() {
-        VideoCapture cap(0);
-        if (!cap.isOpened()) {
+        if (!cap_.isOpened()) {
             return;
         }
         int counter = 0;
         while (1) {
-            Mat frame;
-            cap >> frame;
-            cv::Size frame_size = frame.size();
-            cv::Rect roi(frame_size.width / 3, frame_size.height / 4, frame_size.width / 3, frame_size.height / 3);
-            Mat cropped_frame = frame(roi);
-            Mat filter_frame = FilterMat(cropped_frame);
-            std::vector<KeyPoint> keypoints;
-            Mat feature_frame;
-            Ptr<FeatureDetector> detector = ORB::create();
-            detector->detectAndCompute(filter_frame, feature_frame, keypoints, noArray(), false);
-            drawKeypoints(filter_frame, keypoints, feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
-            /*if (keypoints.size() > 0) {
-                std::cout << keypoints.size() << std::endl;
-            }*/
-            //imwrite("assets/" + std::to_string(counter++) + "_" + std::to_string(keypoints.size()) + ".png", cropped_frame);
-            imshow("filtered frame", feature_frame);
-            imshow("cropped frame", cropped_frame);
-            //Sleep(1000);
-            //destroyAllWindows();
+            if (analyze_video_) {
+                Mat frame;
+                cap_ >> frame;
+                cv::Size frame_size = frame.size();
+                cv::Rect roi(frame_size.width / 3, frame_size.height / 4, frame_size.width / 3, frame_size.height / 3);
+                Mat cropped_frame = frame(roi);
+                Mat filter_frame = FilterMat(cropped_frame);
+                std::vector<KeyPoint> keypoints;
+                Mat feature_frame;
+                Ptr<FeatureDetector> detector = ORB::create();
+                detector->detectAndCompute(filter_frame, feature_frame, keypoints, noArray(), false);
+                drawKeypoints(filter_frame, keypoints, feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+                //imwrite("assets/" + std::to_string(counter++) + "_" + std::to_string(keypoints.size()) + ".png", cropped_frame);
+                imshow("filtered frame", feature_frame);
+                imshow("cropped frame", cropped_frame);
+                if (keypoints.size() > 10) {
+                    keyboard_.SwitchTabsRight();
+                    SetPrevTimePoint(std::chrono::system_clock::now());
+                    analyze_video_ = false;
+                }
+            }
+            if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() -
+                GetPrevTimePoint()).count() > 3) {
+                analyze_video_ = true;
+            }
             if (waitKey(30) == 'q') {
+                StopOpenCV();
                 break;
             }
         }
-        cap.release();
-        destroyAllWindows();
-        keyboard_.SwitchTabsRight();
 	}
+
+    void Engine::StopOpenCV() {
+        // cap_.release();
+        destroyAllWindows();
+    }
 
 }  // namespace mylibrary
