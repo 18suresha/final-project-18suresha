@@ -50,8 +50,8 @@ namespace mylibrary {
                     analyze_video_ = false;
                 }
             }
-            if (std::chrono::duration_cast<std::chrono::seconds>(std::chrono::system_clock::now() -
-                GetPrevTimePoint()).count() > 3) {
+            if (std::chrono::duration<double>(std::chrono::system_clock::now() -
+                GetPrevTimePoint()).count() > 1.5) {
                 analyze_video_ = true;
             }
             if (waitKey(30) == 'q') {

@@ -6,31 +6,30 @@
 
 namespace mylibrary {
 
-    Keyboard::Keyboard() {}
+    Keyboard::Keyboard() {
+        ip_.type = INPUT_KEYBOARD;
+        ip_.ki.wScan = 0;
+        ip_.ki.time = 0;
+        ip_.ki.dwExtraInfo = 0;
+        ip1_.type = INPUT_KEYBOARD;
+        ip1_.ki.wScan = 0;
+        ip1_.ki.time = 0;
+        ip1_.ki.dwExtraInfo = 0;
+    }
 
 	void Keyboard::SwitchTabsRight() {
-        INPUT ip;
-        INPUT ip1;
-        Sleep(2000);
+        // Sleep(2000);
         // switch tabs
-        ip.type = INPUT_KEYBOARD;
-        ip.ki.wScan = 0;
-        ip.ki.time = 0;
-        ip.ki.dwExtraInfo = 0;
-        ip.ki.wVk = VK_CONTROL;
-        ip.ki.dwFlags = 0;
-        ip1.type = INPUT_KEYBOARD;
-        ip1.ki.wScan = 0;
-        ip1.ki.time = 0;
-        ip1.ki.dwExtraInfo = 0;
-        ip1.ki.wVk = VK_TAB;
-        ip1.ki.dwFlags = 0;
-        SendInput(1, &ip, sizeof(INPUT));
-        SendInput(1, &ip1, sizeof(INPUT));
-        ip.ki.dwFlags = KEYEVENTF_KEYUP;
-        ip1.ki.dwFlags = KEYEVENTF_KEYUP;
-        SendInput(1, &ip, sizeof(INPUT));
-        SendInput(1, &ip1, sizeof(INPUT));
+        ip_.ki.wVk = VK_CONTROL;
+        ip_.ki.dwFlags = 0;
+        ip1_.ki.wVk = VK_TAB;
+        ip1_.ki.dwFlags = 0;
+        SendInput(1, &ip_, sizeof(INPUT));
+        SendInput(1, &ip1_, sizeof(INPUT));
+        ip_.ki.dwFlags = KEYEVENTF_KEYUP;
+        ip1_.ki.dwFlags = KEYEVENTF_KEYUP;
+        SendInput(1, &ip_, sizeof(INPUT));
+        SendInput(1, &ip1_, sizeof(INPUT));
 	}
 
 
