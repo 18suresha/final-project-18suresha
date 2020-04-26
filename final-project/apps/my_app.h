@@ -5,6 +5,7 @@
 
 #include <cinder/app/App.h>
 #include "cinder/gl/gl.h"
+#include "mylibrary/engine.h"
 
 
 namespace myapp {
@@ -18,6 +19,9 @@ namespace myapp {
         void keyDown(cinder::app::KeyEvent) override;
 
         cinder::gl::Texture2dRef mTex;
+
+    private:
+        mylibrary::Engine engine_;
     };
 
 }  // namespace myapp

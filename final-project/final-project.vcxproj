@@ -146,11 +146,15 @@
   <ItemGroup>
     <ClCompile Include="apps\my_app.cc" />
     <ClCompile Include="apps\run.cc" />
+    <ClCompile Include="src\engine.cc" />
     <ClCompile Include="src\example.cc" />
+    <ClCompile Include="src\keyboard.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="apps\my_app.h" />
+    <ClInclude Include="include\mylibrary\engine.h" />
     <ClInclude Include="include\mylibrary\example.h" />
+    <ClInclude Include="include\mylibrary\keyboard.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
