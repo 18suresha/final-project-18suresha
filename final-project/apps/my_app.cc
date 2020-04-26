@@ -46,9 +46,11 @@ namespace myapp {
 
     Mat FilterMat(const Mat& src_frame) {
         Mat hsv_frame, filter_frame;
-        // filter orange
         cvtColor(src_frame, hsv_frame, COLOR_BGR2HSV);
-        inRange(hsv_frame, Scalar(13, 100, 100), Scalar(17, 255, 255), filter_frame);
+        // filter orange
+        // inRange(hsv_frame, Scalar(13, 100, 100), Scalar(17, 255, 255), filter_frame);
+        // filter orange
+        inRange(hsv_frame, Scalar(118, 100, 100), Scalar(132, 255, 255), filter_frame);
         return filter_frame;
     }
 
@@ -61,10 +63,10 @@ namespace myapp {
         while (1) {
             Mat frame;
             cap >> frame;
-           /* cv::Size frame_size = frame.size();
+            cv::Size frame_size = frame.size();
             cv::Rect roi(frame_size.width / 4, frame_size.height / 6, 2 * frame_size.width / 3, 3 * frame_size.height / 4);
-            Mat cropped_frame = frame(roi);*/
-            Mat filter_frame = FilterMat(frame);
+            Mat cropped_frame = frame(roi);
+            Mat filter_frame = FilterMat(cropped_frame);
             std::vector<KeyPoint> keypoints;
             Mat feature_frame;
             Ptr<FeatureDetector> detector = ORB::create();
@@ -74,7 +76,8 @@ namespace myapp {
                 std::cout << keypoints.size() << std::endl;
             }*/
             // imwrite("assets/" + std::to_string(counter++) + ".png", feature_frame);
-            imshow("frame", feature_frame);
+            imshow("filtered frame", feature_frame);
+            imshow("cropped frame", cropped_frame);
             //Sleep(1000);
             //destroyAllWindows();
             if (waitKey(30) == 'q') {
