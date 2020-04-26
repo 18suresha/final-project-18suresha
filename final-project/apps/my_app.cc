@@ -50,7 +50,7 @@ namespace myapp {
         // filter orange
         // inRange(hsv_frame, Scalar(13, 100, 100), Scalar(17, 255, 255), filter_frame);
         // filter orange
-        inRange(hsv_frame, Scalar(118, 100, 100), Scalar(132, 255, 255), filter_frame);
+        inRange(hsv_frame, Scalar(105, 225, 80), Scalar(132, 250, 225), filter_frame);
         return filter_frame;
     }
 
@@ -64,7 +64,7 @@ namespace myapp {
             Mat frame;
             cap >> frame;
             cv::Size frame_size = frame.size();
-            cv::Rect roi(frame_size.width / 4, frame_size.height / 6, 2 * frame_size.width / 3, 3 * frame_size.height / 4);
+            cv::Rect roi(frame_size.width / 3, frame_size.height / 4, frame_size.width / 3, frame_size.height / 3);
             Mat cropped_frame = frame(roi);
             Mat filter_frame = FilterMat(cropped_frame);
             std::vector<KeyPoint> keypoints;
@@ -75,8 +75,8 @@ namespace myapp {
             /*if (keypoints.size() > 0) {
                 std::cout << keypoints.size() << std::endl;
             }*/
-            // imwrite("assets/" + std::to_string(counter++) + ".png", feature_frame);
-            imshow("filtered frame", feature_frame);
+            imwrite("assets/" + std::to_string(counter++) + "_" + std::to_string(keypoints.size()) + ".png", cropped_frame);
+            // imshow("filtered frame", feature_frame);
             imshow("cropped frame", cropped_frame);
             //Sleep(1000);
             //destroyAllWindows();

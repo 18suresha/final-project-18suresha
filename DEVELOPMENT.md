@@ -18,4 +18,12 @@
   - Configure IDE to follow Google C++ Style Guide
   - Create documentaion on how to set up project in Visual Studio
   - Modularize and improve code quality
+
+- **4/25/20** Implemented HSV color filtering and found good range for blue filter
+  - Identify specific finger movement
+  - Configure IDE to follow Google C++ Style Guide
+  - Create documentaion on how to set up project in Visual Studio
+  - Modularize and improve code quality
+  - Work on user-specified neutral zone
+  - Implement time delay after keyboard input occurs
 ---
