@@ -50,7 +50,7 @@ namespace mylibrary {
                 Mat frame;
                 cap_ >> frame;
                 cv::Size frame_size = frame.size();
-                cv::Rect roi(frame_size.width / 3, frame_size.height / 4, frame_size.width / 3, frame_size.height / 3);
+                cv::Rect roi(neutral_zone_.x, neutral_zone_.y / 2, neutral_zone_.frame_size.width, neutral_zone_.y / 2);
                 Mat cropped_frame = frame(roi);
                 Mat filter_frame = FilterMat(cropped_frame);
                 std::vector<KeyPoint> keypoints;
