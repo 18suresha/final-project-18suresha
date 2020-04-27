@@ -17,11 +17,11 @@ namespace mylibrary {
         neutral_zone_.x = cam_frame_size_.width / 3;
         neutral_zone_.frame_size.width = cam_frame_size_.width / 3;
         neutral_zone_.y = 7 * cam_frame_size_.height / 12;
-        neutral_zone_.frame_size.height = 5 * cam_frame_size_.height / 32;
+        neutral_zone_.frame_size.height = cam_frame_size_.height / 4;
         frame_dims[UP] = Section{ neutral_zone_.x, neutral_zone_.y / 2, neutral_zone_.frame_size.width, neutral_zone_.y / 2};
         frame_dims[RIGHT] = Section{ neutral_zone_.x / 2, neutral_zone_.y, neutral_zone_.x / 2, neutral_zone_.frame_size.height };
-        frame_dims[DOWN] = Section{ neutral_zone_.x, neutral_zone_.y + neutral_zone_.frame_size.height, neutral_zone_.frame_size.width, ((neutral_zone_.y + neutral_zone_.frame_size.height) / 2) + (cam_frame_size_.height / 2) };
-        frame_dims[LEFT] = Section{ neutral_zone_.x + neutral_zone_.frame_size.width, neutral_zone_.y, ((neutral_zone_.x + neutral_zone_.frame_size.width) / 2) + (cam_frame_size_.width / 2), neutral_zone_.frame_size.height };
+        frame_dims[DOWN] = Section{ neutral_zone_.x, neutral_zone_.y + neutral_zone_.frame_size.height, neutral_zone_.frame_size.width, (cam_frame_size_.height / 2) - ((neutral_zone_.y + neutral_zone_.frame_size.height) / 2) };
+        frame_dims[LEFT] = Section{ neutral_zone_.x + neutral_zone_.frame_size.width, neutral_zone_.y, (cam_frame_size_.width / 2) - ((neutral_zone_.x + neutral_zone_.frame_size.width) / 2), neutral_zone_.frame_size.height };
     }
 
     void Engine::SetCamFrameSize() {
@@ -76,21 +76,32 @@ namespace mylibrary {
                 Mat filter_frame = FilterMat(frame);
                 AnalyzeSection(UP, filter_frame);
                 AnalyzeSection(RIGHT, filter_frame);
+                AnalyzeSection(DOWN, filter_frame);
+                AnalyzeSection(LEFT, filter_frame);
                 // drawKeypoints(right_filter_frame, right_keypoints, right_feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
                 // imwrite("assets/" + std::to_string(counter++) + "_" + std::to_string(keypoints.size()) + ".png", right_frame);
-                Section sec = frame_dims[RIGHT];
+                Section sec = frame_dims[LEFT];
                 Rect roi(sec.x, sec.y, sec.frame_size.width, sec.frame_size.height);
                 Mat cropped_frame = filter_frame(roi);
                 // take feature_frame out?
                 Mat feature_frame;
-                drawKeypoints(cropped_frame, section_keypoints[RIGHT], feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+                drawKeypoints(cropped_frame, section_keypoints[LEFT], feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
                 imshow("right", feature_frame);
                 if (section_keypoints[UP].size() > 10) {
                     keyboard_.ScrollUp();
                     SetPrevTimePoint(std::chrono::system_clock::now());
                     analyze_video_ = false;
-                } else if (section_keypoints[RIGHT].size() > 5) {
+                }
+                else if (section_keypoints[RIGHT].size() > 2) {
                     keyboard_.SwitchTabsRight();
+                    SetPrevTimePoint(std::chrono::system_clock::now());
+                    analyze_video_ = false;
+                } else if (section_keypoints[DOWN].size() > 15) {
+                    keyboard_.ScrollDown();
+                    SetPrevTimePoint(std::chrono::system_clock::now());
+                    analyze_video_ = false;
+                } else if (section_keypoints[LEFT].size() > 2) {
+                    keyboard_.SwitchTabsLeft();
                     SetPrevTimePoint(std::chrono::system_clock::now());
                     analyze_video_ = false;
                 }

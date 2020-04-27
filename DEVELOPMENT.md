@@ -35,7 +35,7 @@
   - Implement splitting of frame into different areas
   - Implement creating average base threshold of keypoints when user not moving finger
 
-- **4/27/20** Implemented user inputting neutral zone
+- **4/27/20** Modularized frame analysis, switched back to FAST feature detection
   - Identify specific finger movement
   - Configure IDE to follow Google C++ Style Guide
   - Create documentaion on how to set up project in Visual Studio
@@ -45,4 +45,5 @@
   - Implement multithreading for analysis of different video sectors
   - Add options for colors other than blue
   - Double check frame_dims calculations to make sure they never go beyond camera frame
+  - Figure out how to exit application w/o waitKey() when no imshow() is called
 ---
