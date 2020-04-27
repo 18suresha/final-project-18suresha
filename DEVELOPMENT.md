@@ -26,4 +26,12 @@
   - Modularize and improve code quality
   - Work on user-specified neutral zone
   - Implement time delay after keyboard input occurs
+
+- **4/26/20** Implemented user inputting neutral zone
+  - Identify specific finger movement
+  - Configure IDE to follow Google C++ Style Guide
+  - Create documentaion on how to set up project in Visual Studio
+  - Improve code quality
+  - Implement splitting of frame into different areas
+  - Implement creating average base threshold of keypoints when user not moving finger
 ---
