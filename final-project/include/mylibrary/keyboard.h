@@ -10,6 +10,7 @@ class Keyboard {
 	public:
 		Keyboard();
 		void SwitchTabsRight();
+		void ScrollUp();
 
 	private:
 		INPUT ip_;

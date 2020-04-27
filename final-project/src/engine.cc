@@ -62,13 +62,13 @@ namespace mylibrary {
                 imshow("filtered frame", feature_frame);
                 imshow("cropped frame", cropped_frame);
                 if (keypoints.size() > 10) {
-                    keyboard_.SwitchTabsRight();
+                    keyboard_.ScrollUp();
                     SetPrevTimePoint(std::chrono::system_clock::now());
                     analyze_video_ = false;
                 }
             }
             if (std::chrono::duration<double>(std::chrono::system_clock::now() -
-                GetPrevTimePoint()).count() > 1.5) {
+                GetPrevTimePoint()).count() > 1) {
                 analyze_video_ = true;
             }
             if (waitKey(30) == 'q') {

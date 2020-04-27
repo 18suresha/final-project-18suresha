@@ -32,5 +32,17 @@ namespace mylibrary {
         SendInput(1, &ip1_, sizeof(INPUT));
 	}
 
+    void Keyboard::ScrollUp() {
+        // Sleep(2000);
+        // scroll up
+        ip_.ki.wVk = VK_UP;
+        ip_.ki.dwFlags = 0;
+        for (int i = 0; i < 8; i++) {
+            SendInput(1, &ip_, sizeof(INPUT));
+        }
+        ip_.ki.dwFlags = KEYEVENTF_KEYUP;
+        SendInput(1, &ip_, sizeof(INPUT));
+    }
+
 
 }  // namespace mylibrary
