@@ -34,4 +34,15 @@
   - Improve code quality
   - Implement splitting of frame into different areas
   - Implement creating average base threshold of keypoints when user not moving finger
+
+- **4/27/20** Implemented user inputting neutral zone
+  - Identify specific finger movement
+  - Configure IDE to follow Google C++ Style Guide
+  - Create documentaion on how to set up project in Visual Studio
+  - Improve code quality
+  - Implement splitting of frame into different areas
+  - Implement creating average base threshold of keypoints when user not moving finger
+  - Implement multithreading for analysis of different video sectors
+  - Add options for colors other than blue
+  - Double check frame_dims calculations to make sure they never go beyond camera frame
 ---

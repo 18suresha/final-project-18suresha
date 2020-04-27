@@ -4,6 +4,7 @@
 
 #include <chrono>
 #include <opencv2/opencv.hpp>
+#include <vector>
 
 #include "mylibrary/keyboard.h"
 
@@ -14,10 +15,17 @@ struct FrameSize {
 	int height;
 };
 
-struct NeutralZone {
+struct Section {
 	int x;
 	int y;
 	FrameSize frame_size;
+};
+
+enum Direction {
+	UP,
+	RIGHT,
+	DOWN,
+	LEFT
 };
 
 class Engine {
@@ -27,12 +35,16 @@ class Engine {
 		void DisplayNeutralZone();
 		bool IsNeutralZoneValid();
 		FrameSize GetCamFrameSize();
-		void SetNeutralZone(NeutralZone neutral_zone);
-		NeutralZone GetNeutralZone();
+		void SetNeutralZone(Section neutral_zone);
+		Section GetNeutralZone();
 
 	private:
 		void SetCamFrameSize();
 		void StopOpenCV();
+		bool CheckNeutralStartingPoints();
+		bool CheckNeutralWidth();
+		bool CheckNeutralHeight();
+		void AnalyzeSection(Direction dir, const cv::Mat& src_frame);
 		void SetPrevTimePoint(
 			const std::chrono::time_point<std::chrono::system_clock>& time_point) {
 			prev_time_point_ = time_point;
@@ -47,10 +59,9 @@ class Engine {
 		Keyboard keyboard_;
 		FrameSize cam_frame_size_;
 		std::chrono::time_point<std::chrono::system_clock> prev_time_point_;
-		NeutralZone neutral_zone_;
-		bool CheckNeutralStartingPoints();
-		bool CheckNeutralWidth();
-		bool CheckNeutralHeight();
+		Section neutral_zone_;	
+		std::map<Direction, Section> frame_dims;
+		std::map<Direction, std::vector<cv::KeyPoint>> section_keypoints;
 };
 
 }  // namespace mylibrary

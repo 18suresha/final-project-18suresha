@@ -10,11 +10,14 @@ class Keyboard {
 	public:
 		Keyboard();
 		void SwitchTabsRight();
+		void SwitchTabsLeft();
 		void ScrollUp();
+		void ScrollDown();
 
 	private:
 		INPUT ip_;
 		INPUT ip1_;
+		INPUT ip2_;
 };
 
 }  // namespace mylibrary

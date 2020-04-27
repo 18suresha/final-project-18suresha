@@ -4,6 +4,7 @@
 #include <opencv2/features2d.hpp>
 #include <chrono>
 #include <vector>
+#include <cinder/app/App.h>
 
 #include "mylibrary/engine.h"
 
@@ -17,6 +18,10 @@ namespace mylibrary {
         neutral_zone_.frame_size.width = cam_frame_size_.width / 3;
         neutral_zone_.y = 7 * cam_frame_size_.height / 12;
         neutral_zone_.frame_size.height = 5 * cam_frame_size_.height / 32;
+        frame_dims[UP] = Section{ neutral_zone_.x, neutral_zone_.y / 2, neutral_zone_.frame_size.width, neutral_zone_.y / 2};
+        frame_dims[RIGHT] = Section{ neutral_zone_.x / 2, neutral_zone_.y, neutral_zone_.x / 2, neutral_zone_.frame_size.height };
+        frame_dims[DOWN] = Section{ neutral_zone_.x, neutral_zone_.y + neutral_zone_.frame_size.height, neutral_zone_.frame_size.width, ((neutral_zone_.y + neutral_zone_.frame_size.height) / 2) + (cam_frame_size_.height / 2) };
+        frame_dims[LEFT] = Section{ neutral_zone_.x + neutral_zone_.frame_size.width, neutral_zone_.y, ((neutral_zone_.x + neutral_zone_.frame_size.width) / 2) + (cam_frame_size_.width / 2), neutral_zone_.frame_size.height };
     }
 
     void Engine::SetCamFrameSize() {
@@ -34,7 +39,7 @@ namespace mylibrary {
         return cam_frame_size_;
     }
 
-    NeutralZone Engine::GetNeutralZone() {
+    Section Engine::GetNeutralZone() {
         return neutral_zone_;
     }
 
@@ -44,8 +49,19 @@ namespace mylibrary {
         // filter orange
         // inRange(hsv_frame, Scalar(13, 100, 100), Scalar(17, 255, 255), filter_frame);
         // filter orange
-        inRange(hsv_frame, Scalar(102, 210, 80), Scalar(134, 250, 225), filter_frame);
+        inRange(hsv_frame, Scalar(110, 210, 80), Scalar(120, 255, 225), filter_frame);
         return filter_frame;
+    }
+
+    void Engine::AnalyzeSection(Direction dir, const Mat& src_frame) {
+        Section sec = frame_dims[dir];
+        Rect roi(sec.x, sec.y, sec.frame_size.width, sec.frame_size.height);
+        Mat cropped_frame = src_frame(roi);
+        Ptr<FeatureDetector> detector = ORB::create();  
+        FAST(cropped_frame, section_keypoints[dir], 0, false);
+        // take feature_frame out?
+        Mat feature_frame;
+        //detector->detectAndCompute(cropped_frame, feature_frame, section_keypoints[dir], noArray(), false);
     }
 
 	void Engine::RunOpenCV() {
@@ -57,31 +73,23 @@ namespace mylibrary {
             if (analyze_video_) {
                 Mat frame;
                 cap_ >> frame;
-                Size frame_size = frame.size();
-                Rect up(neutral_zone_.x, neutral_zone_.y / 2, neutral_zone_.frame_size.width, neutral_zone_.y / 2);
-                Mat up_frame = frame(up);
-                Rect right(neutral_zone_.x / 2, neutral_zone_.y, neutral_zone_.x / 2, neutral_zone_.frame_size.height);
-                Mat right_frame = frame(right);
-                Mat right_filter_frame = FilterMat(right_frame);
-                Mat up_filter_frame = FilterMat(up_frame);
-                std::vector<KeyPoint> up_keypoints;
-                std::vector<KeyPoint> right_keypoints;
-                Mat right_feature_frame;
-                Mat up_feature_frame;
-                Ptr<FeatureDetector> detector = ORB::create();
-                detector->detectAndCompute(right_filter_frame, right_feature_frame, right_keypoints, noArray(), false);
-                drawKeypoints(right_filter_frame, right_keypoints, right_feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
-                detector->detectAndCompute(up_filter_frame, up_feature_frame, up_keypoints, noArray(), false);
-                drawKeypoints(up_filter_frame, up_keypoints, up_feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+                Mat filter_frame = FilterMat(frame);
+                AnalyzeSection(UP, filter_frame);
+                AnalyzeSection(RIGHT, filter_frame);
+                // drawKeypoints(right_filter_frame, right_keypoints, right_feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
                 // imwrite("assets/" + std::to_string(counter++) + "_" + std::to_string(keypoints.size()) + ".png", right_frame);
-                imshow("right frame", right_feature_frame);
-                imshow("up frame", up_feature_frame);
-                if (up_keypoints.size() > 10) {
+                Section sec = frame_dims[RIGHT];
+                Rect roi(sec.x, sec.y, sec.frame_size.width, sec.frame_size.height);
+                Mat cropped_frame = filter_frame(roi);
+                // take feature_frame out?
+                Mat feature_frame;
+                drawKeypoints(cropped_frame, section_keypoints[RIGHT], feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+                imshow("right", feature_frame);
+                if (section_keypoints[UP].size() > 10) {
                     keyboard_.ScrollUp();
                     SetPrevTimePoint(std::chrono::system_clock::now());
                     analyze_video_ = false;
-                } else if (right_keypoints.size() > 2) {
-                    // keyboard_.ScrollUp();
+                } else if (section_keypoints[RIGHT].size() > 5) {
                     keyboard_.SwitchTabsRight();
                     SetPrevTimePoint(std::chrono::system_clock::now());
                     analyze_video_ = false;
@@ -137,7 +145,7 @@ namespace mylibrary {
         return CheckNeutralStartingPoints() && CheckNeutralWidth() && CheckNeutralHeight();
     }
 
-    void Engine::SetNeutralZone(NeutralZone neutral_zone) {
+    void Engine::SetNeutralZone(Section neutral_zone) {
         neutral_zone_ = neutral_zone;
     }
 

@@ -25,7 +25,7 @@ namespace myapp {
         int neutral_y_;
         int neutral_width_;
         int neutral_height_;
-        mylibrary::NeutralZone neutral_zone_;
+        mylibrary::Section neutral_zone_;
         std::string cam_width_text_;
         std::string cam_height_text_;
         mylibrary::FrameSize cam_frame_size_;
