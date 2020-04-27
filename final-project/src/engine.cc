@@ -71,7 +71,7 @@ namespace mylibrary {
             return;
         }
         int counter = 0;
-        while (1) {
+        //while (1) {
             if (analyze_video_) {
                 Mat frame;
                 cap_ >> frame;
@@ -116,11 +116,11 @@ namespace mylibrary {
                 GetPrevTimePoint()).count() > 1) {
                 analyze_video_ = true;
             }
-            if (waitKey(30) == 'q') {
+            /*if (waitKey(30) == 'q') {
                 StopOpenCV();
                 break;
-            }
-        }
+            }*/
+        //}
 	}
 
     void Engine::DisplayNeutralZone() {

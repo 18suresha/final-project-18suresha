@@ -21,14 +21,15 @@ namespace myapp {
 	}
 	
 	void MyApp::setup() {
+		run_opencv_ = false;
 		ImGui::Initialize();
 	}
 
 	void MyApp::update() {
-		bool run_opencv = false;
+		// bool run_opencv = false;
 		bool display_neutral_zone = false;
 		if (ImGui::BeginMenu("Component to Run")) {
-			ImGui::MenuItem("ORB", nullptr, &run_opencv);
+			ImGui::MenuItem("ORB", nullptr, &run_opencv_);
 			ImGui::MenuItem("Neutral Zone", nullptr, &display_neutral_zone);
 			ImGui::EndMenu();
 		}
@@ -42,7 +43,7 @@ namespace myapp {
 
 		engine_.SetNeutralZone(neutral_zone_);
 
-		if (run_opencv && engine_.IsNeutralZoneValid()) {
+		if (run_opencv_ && engine_.IsNeutralZoneValid()) {
 			engine_.RunOpenCV();
 		} else if (display_neutral_zone && engine_.IsNeutralZoneValid()) {
 			engine_.DisplayNeutralZone();

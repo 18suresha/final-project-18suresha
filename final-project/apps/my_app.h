@@ -25,6 +25,7 @@ namespace myapp {
         int neutral_y_;
         int neutral_width_;
         int neutral_height_;
+        bool run_opencv_;
         mylibrary::Section neutral_zone_;
         std::string cam_width_text_;
         std::string cam_height_text_;
