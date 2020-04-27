@@ -14,30 +14,28 @@ using std::thread;
 
 namespace mylibrary {
 
-    Engine::Engine() : analyze_video_{ false }, cap_{ 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() } {
-        SetCamFrameSize();
+    Engine::Engine() : analyze_video_{ false }, cap_{ 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() }, cam_frame_size_{SetCamFrameSize()} { 
         neutral_zone_.x = cam_frame_size_.width / 3;
         neutral_zone_.frame_size.width = cam_frame_size_.width / 3;
         neutral_zone_.y = 7 * cam_frame_size_.height / 12;
-        neutral_zone_.frame_size.height = cam_frame_size_.height / 4;
-        frame_dims[UP] = Section{ neutral_zone_.x, neutral_zone_.y / 2, neutral_zone_.frame_size.width, neutral_zone_.y / 2};
-        frame_dims[RIGHT] = Section{ neutral_zone_.x / 2, neutral_zone_.y, neutral_zone_.x / 2, neutral_zone_.frame_size.height };
-        frame_dims[DOWN] = Section{ neutral_zone_.x, neutral_zone_.y + neutral_zone_.frame_size.height, neutral_zone_.frame_size.width, (cam_frame_size_.height / 2) - ((neutral_zone_.y + neutral_zone_.frame_size.height) / 2) };
-        frame_dims[LEFT] = Section{ neutral_zone_.x + neutral_zone_.frame_size.width, neutral_zone_.y, (cam_frame_size_.width / 2) - ((neutral_zone_.x + neutral_zone_.frame_size.width) / 2), neutral_zone_.frame_size.height };
+        neutral_zone_.frame_size.height = cam_frame_size_.height / 5;
+        frame_dims[UP] = Section{ neutral_zone_.x, neutral_zone_.y / 2, Size{neutral_zone_.frame_size.width, neutral_zone_.y / 2} };
+        frame_dims[RIGHT] = Section{ neutral_zone_.x / 2, neutral_zone_.y, Size{neutral_zone_.x / 2, neutral_zone_.frame_size.height } };
+        frame_dims[DOWN] = Section{ neutral_zone_.x, neutral_zone_.y + neutral_zone_.frame_size.height, Size{neutral_zone_.frame_size.width, (cam_frame_size_.height) - ((neutral_zone_.y + neutral_zone_.frame_size.height)) } };
+        frame_dims[LEFT] = Section{ neutral_zone_.x + neutral_zone_.frame_size.width, neutral_zone_.y, Size{(cam_frame_size_.width / 2) - ((neutral_zone_.x + neutral_zone_.frame_size.width) / 2), neutral_zone_.frame_size.height } };
     }
 
-    void Engine::SetCamFrameSize() {
+    Size Engine::SetCamFrameSize() {
         if (!cap_.isOpened()) {
-            return;
+            return Size{ 0, 0 };
         }
         Mat frame;
         cap_ >> frame;
         Size frame_size = frame.size();
-        cam_frame_size_.width = frame_size.width;
-        cam_frame_size_.height = frame_size.height;
+        return frame_size;
     }
 
-    FrameSize Engine::GetCamFrameSize() {
+    Size Engine::GetCamFrameSize() {
         return cam_frame_size_;
     }
 
@@ -71,7 +69,7 @@ namespace mylibrary {
             return;
         }
         int counter = 0;
-        //while (1) {
+        // while (1) {
             if (analyze_video_) {
                 Mat frame;
                 cap_ >> frame;
@@ -86,27 +84,27 @@ namespace mylibrary {
                 right.join();
                 down.join();
                 left.join();
-                Section sec = frame_dims[LEFT];
+                Section sec = frame_dims[DOWN];
                 Rect roi(sec.x, sec.y, sec.frame_size.width, sec.frame_size.height);
                 Mat cropped_frame = filter_frame(roi);
                 // take feature_frame out?
                 Mat feature_frame;
-                drawKeypoints(cropped_frame, section_keypoints[LEFT], feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+                drawKeypoints(cropped_frame, section_keypoints[DOWN], feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
                 imshow("right", feature_frame);
                 if (section_keypoints[UP].size() > 10) {
                     keyboard_.ScrollUp();
                     SetPrevTimePoint(std::chrono::system_clock::now());
                     analyze_video_ = false;
                 }
-                else if (section_keypoints[RIGHT].size() > 2) {
+                else if (section_keypoints[RIGHT].size() > 4) {
                     keyboard_.SwitchTabsRight();
                     SetPrevTimePoint(std::chrono::system_clock::now());
                     analyze_video_ = false;
-                } else if (section_keypoints[DOWN].size() > 15) {
+                } else if (section_keypoints[DOWN].size() > 10) {
                     keyboard_.ScrollDown();
                     SetPrevTimePoint(std::chrono::system_clock::now());
                     analyze_video_ = false;
-                } else if (section_keypoints[LEFT].size() > 2) {
+                } else if (section_keypoints[LEFT].size() > 4) {
                     keyboard_.SwitchTabsLeft();
                     SetPrevTimePoint(std::chrono::system_clock::now());
                     analyze_video_ = false;
@@ -120,10 +118,10 @@ namespace mylibrary {
                 StopOpenCV();
                 break;
             }*/
-        //}
+       // }
 	}
-
     void Engine::DisplayNeutralZone() {
+
         if (!cap_.isOpened()) {
             return;
         }

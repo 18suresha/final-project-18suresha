@@ -29,7 +29,6 @@ namespace myapp {
         mylibrary::Section neutral_zone_;
         std::string cam_width_text_;
         std::string cam_height_text_;
-        mylibrary::FrameSize cam_frame_size_;
         mylibrary::Engine engine_;
     };
 

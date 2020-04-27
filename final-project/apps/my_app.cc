@@ -11,12 +11,10 @@
 namespace myapp {
 
 	using cinder::app::KeyEvent;
-    using namespace cv;
 
 	MyApp::MyApp() : engine_{} {
-		cam_frame_size_ = engine_.GetCamFrameSize();
-		cam_width_text_ = "Camera Width: " + std::to_string(cam_frame_size_.width);
-		cam_height_text_ = "Camera Height: " + std::to_string(cam_frame_size_.height);
+		cam_width_text_ = "Camera Width: " + std::to_string(engine_.GetCamFrameSize().width);
+		cam_height_text_ = "Camera Height: " + std::to_string(engine_.GetCamFrameSize().height);
 		neutral_zone_ = engine_.GetNeutralZone();
 	}
 	

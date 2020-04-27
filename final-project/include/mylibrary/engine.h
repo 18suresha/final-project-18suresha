@@ -10,15 +10,10 @@
 
 namespace mylibrary {
 
-struct FrameSize {
-	int width;
-	int height;
-};
-
 struct Section {
 	int x;
 	int y;
-	FrameSize frame_size;
+	cv::Size frame_size;
 };
 
 enum Direction {
@@ -34,12 +29,12 @@ class Engine {
 		void RunOpenCV();
 		void DisplayNeutralZone();
 		bool IsNeutralZoneValid();
-		FrameSize GetCamFrameSize();
+		cv::Size GetCamFrameSize();
 		void SetNeutralZone(Section neutral_zone);
 		Section GetNeutralZone();
 
 	private:
-		void SetCamFrameSize();
+		cv::Size SetCamFrameSize();
 		void StopOpenCV();
 		bool CheckNeutralStartingPoints();
 		bool CheckNeutralWidth();
@@ -57,7 +52,7 @@ class Engine {
 		bool analyze_video_;
 		cv::VideoCapture cap_;
 		Keyboard keyboard_;
-		FrameSize cam_frame_size_;
+		const cv::Size cam_frame_size_;
 		std::chrono::time_point<std::chrono::system_clock> prev_time_point_;
 		Section neutral_zone_;	
 		std::map<Direction, Section> frame_dims;
