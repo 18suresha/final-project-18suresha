@@ -11,8 +11,12 @@ using namespace cv;
 
 namespace mylibrary {
 
-    Engine::Engine() : analyze_video_{ false }, cap_{ 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() }, neutral_zone_{ 0, 0, FrameSize{0, 0} } {
+    Engine::Engine() : analyze_video_{ false }, cap_{ 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() } {
         SetCamFrameSize();
+        neutral_zone_.x = cam_frame_size_.width / 3;
+        neutral_zone_.frame_size.width = cam_frame_size_.width / 3;
+        neutral_zone_.y = 7 * cam_frame_size_.height / 12;
+        neutral_zone_.frame_size.height = 5 * cam_frame_size_.height / 32;
     }
 
     void Engine::SetCamFrameSize() {
@@ -28,6 +32,10 @@ namespace mylibrary {
 
     FrameSize Engine::GetCamFrameSize() {
         return cam_frame_size_;
+    }
+
+    NeutralZone Engine::GetNeutralZone() {
+        return neutral_zone_;
     }
 
     Mat FilterMat(const Mat& src_frame) {
@@ -117,11 +125,8 @@ namespace mylibrary {
         return CheckNeutralStartingPoints() && CheckNeutralWidth() && CheckNeutralHeight();
     }
 
-    void Engine::SetNeutralZone(int x, int y, int width, int height) {
-        neutral_zone_.x = x;
-        neutral_zone_.y = y;
-        neutral_zone_.frame_size.width = width;
-        neutral_zone_.frame_size.height = height;
+    void Engine::SetNeutralZone(NeutralZone neutral_zone) {
+        neutral_zone_ = neutral_zone;
     }
 
 }  // namespace mylibrary

@@ -19,10 +19,11 @@ namespace myapp {
 	using cinder::app::KeyEvent;
     using namespace cv;
 
-	MyApp::MyApp() : neutral_x_{ 0 }, neutral_y_{ 0 }, neutral_width_{ 0 }, neutral_height_{ 0 }, engine_{} {
+	MyApp::MyApp() : engine_{} {
 		cam_frame_size_ = engine_.GetCamFrameSize();
 		cam_width_text_ = "Camera Width: " + std::to_string(cam_frame_size_.width);
 		cam_height_text_ = "Camera Height: " + std::to_string(cam_frame_size_.height);
+		neutral_zone_ = engine_.GetNeutralZone();
 	}
 	
 	void MyApp::setup() {
@@ -37,15 +38,15 @@ namespace myapp {
 			ImGui::MenuItem("Neutral Zone", nullptr, &display_neutral_zone);
 			ImGui::EndMenu();
 		}
-		ImGui::InputInt("Starting X Position of Neutral Zone", &neutral_x_);
-		ImGui::InputInt("Starting Y Position of Neutral Zone", &neutral_y_);
-		ImGui::InputInt("Width of Neutral Zone", &neutral_width_);
-		ImGui::InputInt("Height of Neutral Zone", &neutral_height_);
+		ImGui::InputInt("Starting X Position of Neutral Zone", &neutral_zone_.x);
+		ImGui::InputInt("Starting Y Position of Neutral Zone", &neutral_zone_.y);
+		ImGui::InputInt("Width of Neutral Zone", &neutral_zone_.frame_size.width);
+		ImGui::InputInt("Height of Neutral Zone", &neutral_zone_.frame_size.height);
 
 		ImGui::Text(cam_width_text_.c_str());
 		ImGui::Text(cam_height_text_.c_str());
 
-		engine_.SetNeutralZone(neutral_x_, neutral_y_, neutral_width_, neutral_height_);
+		engine_.SetNeutralZone(neutral_zone_);
 
 		if (run_opencv && engine_.IsNeutralZoneValid()) {
 			engine_.RunOpenCV();

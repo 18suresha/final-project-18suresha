@@ -27,7 +27,8 @@ class Engine {
 		void DisplayNeutralZone();
 		bool IsNeutralZoneValid();
 		FrameSize GetCamFrameSize();
-		void SetNeutralZone(int x, int y, int width, int height);
+		void SetNeutralZone(NeutralZone neutral_zone);
+		NeutralZone GetNeutralZone();
 
 	private:
 		void SetCamFrameSize();
