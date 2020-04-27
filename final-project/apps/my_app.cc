@@ -8,12 +8,6 @@
 #include <cinder/Surface.h>
 #include <cinder/CinderImGui.h>
 
-#include <opencv2/opencv.hpp>
-#include <opencv2/features2d.hpp>
-#include <vector>
-// have to include windows.h after cinder headers b/c windows.h declares macros that conflict with code in cinder headers
-#include <windows.h>
-
 namespace myapp {
 
 	using cinder::app::KeyEvent;

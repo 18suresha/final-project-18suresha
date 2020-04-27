@@ -44,7 +44,7 @@ namespace mylibrary {
         // filter orange
         // inRange(hsv_frame, Scalar(13, 100, 100), Scalar(17, 255, 255), filter_frame);
         // filter orange
-        inRange(hsv_frame, Scalar(105, 225, 80), Scalar(132, 250, 225), filter_frame);
+        inRange(hsv_frame, Scalar(102, 210, 80), Scalar(134, 250, 225), filter_frame);
         return filter_frame;
     }
 
@@ -57,20 +57,32 @@ namespace mylibrary {
             if (analyze_video_) {
                 Mat frame;
                 cap_ >> frame;
-                cv::Size frame_size = frame.size();
-                cv::Rect roi(neutral_zone_.x, neutral_zone_.y / 2, neutral_zone_.frame_size.width, neutral_zone_.y / 2);
-                Mat cropped_frame = frame(roi);
-                Mat filter_frame = FilterMat(cropped_frame);
-                std::vector<KeyPoint> keypoints;
-                Mat feature_frame;
+                Size frame_size = frame.size();
+                Rect up(neutral_zone_.x, neutral_zone_.y / 2, neutral_zone_.frame_size.width, neutral_zone_.y / 2);
+                Mat up_frame = frame(up);
+                Rect right(neutral_zone_.x / 2, neutral_zone_.y, neutral_zone_.x / 2, neutral_zone_.frame_size.height);
+                Mat right_frame = frame(right);
+                Mat right_filter_frame = FilterMat(right_frame);
+                Mat up_filter_frame = FilterMat(up_frame);
+                std::vector<KeyPoint> up_keypoints;
+                std::vector<KeyPoint> right_keypoints;
+                Mat right_feature_frame;
+                Mat up_feature_frame;
                 Ptr<FeatureDetector> detector = ORB::create();
-                detector->detectAndCompute(filter_frame, feature_frame, keypoints, noArray(), false);
-                drawKeypoints(filter_frame, keypoints, feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
-                //imwrite("assets/" + std::to_string(counter++) + "_" + std::to_string(keypoints.size()) + ".png", cropped_frame);
-                imshow("filtered frame", feature_frame);
-                imshow("cropped frame", cropped_frame);
-                if (keypoints.size() > 10) {
+                detector->detectAndCompute(right_filter_frame, right_feature_frame, right_keypoints, noArray(), false);
+                drawKeypoints(right_filter_frame, right_keypoints, right_feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+                detector->detectAndCompute(up_filter_frame, up_feature_frame, up_keypoints, noArray(), false);
+                drawKeypoints(up_filter_frame, up_keypoints, up_feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+                // imwrite("assets/" + std::to_string(counter++) + "_" + std::to_string(keypoints.size()) + ".png", right_frame);
+                imshow("right frame", right_feature_frame);
+                imshow("up frame", up_feature_frame);
+                if (up_keypoints.size() > 10) {
                     keyboard_.ScrollUp();
+                    SetPrevTimePoint(std::chrono::system_clock::now());
+                    analyze_video_ = false;
+                } else if (right_keypoints.size() > 2) {
+                    // keyboard_.ScrollUp();
+                    keyboard_.SwitchTabsRight();
                     SetPrevTimePoint(std::chrono::system_clock::now());
                     analyze_video_ = false;
                 }
