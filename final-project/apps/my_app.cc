@@ -31,8 +31,10 @@ namespace myapp {
 
 	void MyApp::update() {
 		bool run_opencv = false;
+		bool display_neutral_zone = false;
 		if (ImGui::BeginMenu("Component to Run")) {
 			ImGui::MenuItem("ORB", nullptr, &run_opencv);
+			ImGui::MenuItem("Neutral Zone", nullptr, &display_neutral_zone);
 			ImGui::EndMenu();
 		}
 		ImGui::InputInt("Starting X Position of Neutral Zone", &neutral_x_);
@@ -47,6 +49,8 @@ namespace myapp {
 
 		if (run_opencv && engine_.IsNeutralZoneValid()) {
 			engine_.RunOpenCV();
+		} else if (display_neutral_zone && engine_.IsNeutralZoneValid()) {
+			engine_.DisplayNeutralZone();
 		}
 	}
 

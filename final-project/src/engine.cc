@@ -78,6 +78,24 @@ namespace mylibrary {
         }
 	}
 
+    void Engine::DisplayNeutralZone() {
+        if (!cap_.isOpened()) {
+            return;
+        }
+        while (1) {
+            Mat frame;
+            cap_ >> frame;
+            cv::Size frame_size = frame.size();
+            cv::Rect roi(neutral_zone_.x, neutral_zone_.y, neutral_zone_.frame_size.width, neutral_zone_.frame_size.height);
+            Mat cropped_frame = frame(roi);
+            imshow("Neutral Zone", cropped_frame);
+            if (waitKey(30) == 'q') {
+                StopOpenCV();
+                break;
+            }
+        }
+    }
+
     void Engine::StopOpenCV() {
         // cap_.release();
         destroyAllWindows();
@@ -88,11 +106,11 @@ namespace mylibrary {
     }
 
     bool Engine::CheckNeutralWidth() {
-        return (neutral_zone_.frame_size.width >= 0) && (neutral_zone_.x + neutral_zone_.frame_size.width <= cam_frame_size_.width);
+        return (neutral_zone_.frame_size.width > 0) && (neutral_zone_.x + neutral_zone_.frame_size.width <= cam_frame_size_.width);
     }
 
     bool Engine::CheckNeutralHeight() {
-        return (neutral_zone_.frame_size.height >= 0) && (neutral_zone_.y + neutral_zone_.frame_size.height <= cam_frame_size_.height);
+        return (neutral_zone_.frame_size.height > 0) && (neutral_zone_.y + neutral_zone_.frame_size.height <= cam_frame_size_.height);
     }
 
     bool Engine::IsNeutralZoneValid() {

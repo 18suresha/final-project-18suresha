@@ -24,6 +24,7 @@ class Engine {
 	public:
 		Engine();
 		void RunOpenCV();
+		void DisplayNeutralZone();
 		bool IsNeutralZoneValid();
 		FrameSize GetCamFrameSize();
 		void SetNeutralZone(int x, int y, int width, int height);
