@@ -16,7 +16,7 @@ def tryORB():
         ret, frame = vidObj.read()
         if ret == True:
             height, width = frame.shape[:2]
-            frame = frame[int(height / 4):int(height / 2), int(width / 4):int((3 * width / 4))]
+            #frame = frame[int(height / 4):int(height / 2), int(width / 4):int((3 * width / 4))]
             kp = orb.detect(frame, None)
             kp, des = orb.compute(frame, kp)
             feature_frame = cv.drawKeypoints(frame, kp, None, color=(0,255,0), flags = 0)
@@ -24,7 +24,7 @@ def tryORB():
             # plt.imshow(feature_frame),plt.show()
             cv.imwrite("assets/ORB/%d_ORB_%d.jpg" % (counter, len(kp)), frame)
             counter += 1
-            cv.imshow("What's good", feature_frame)
+            cv.imshow("What's good", frame)
             # Press q on keyboard to  exit
             if cv.waitKey(25) & 0xFF == ord('q'):
                 break

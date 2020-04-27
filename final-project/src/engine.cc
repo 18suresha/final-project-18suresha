@@ -11,7 +11,24 @@ using namespace cv;
 
 namespace mylibrary {
 
-    Engine::Engine() : analyze_video_{ false }, cap_ { 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() } {}
+    Engine::Engine() : analyze_video_{ false }, cap_{ 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() }, neutral_zone_{ 0, 0, FrameSize{0, 0} } {
+        SetCamFrameSize();
+    }
+
+    void Engine::SetCamFrameSize() {
+        if (!cap_.isOpened()) {
+            return;
+        }
+        Mat frame;
+        cap_ >> frame;
+        Size frame_size = frame.size();
+        cam_frame_size_.width = frame_size.width;
+        cam_frame_size_.height = frame_size.height;
+    }
+
+    FrameSize Engine::GetCamFrameSize() {
+        return cam_frame_size_;
+    }
 
     Mat FilterMat(const Mat& src_frame) {
         Mat hsv_frame, filter_frame;
@@ -64,6 +81,29 @@ namespace mylibrary {
     void Engine::StopOpenCV() {
         // cap_.release();
         destroyAllWindows();
+    }
+
+    bool Engine::CheckNeutralStartingPoints() {
+        return neutral_zone_.x >= 0 && neutral_zone_.y >= 0;
+    }
+
+    bool Engine::CheckNeutralWidth() {
+        return (neutral_zone_.frame_size.width >= 0) && (neutral_zone_.x + neutral_zone_.frame_size.width <= cam_frame_size_.width);
+    }
+
+    bool Engine::CheckNeutralHeight() {
+        return (neutral_zone_.frame_size.height >= 0) && (neutral_zone_.y + neutral_zone_.frame_size.height <= cam_frame_size_.height);
+    }
+
+    bool Engine::IsNeutralZoneValid() {
+        return CheckNeutralStartingPoints() && CheckNeutralWidth() && CheckNeutralHeight();
+    }
+
+    void Engine::SetNeutralZone(int x, int y, int width, int height) {
+        neutral_zone_.x = x;
+        neutral_zone_.y = y;
+        neutral_zone_.frame_size.width = width;
+        neutral_zone_.frame_size.height = height;
     }
 
 }  // namespace mylibrary

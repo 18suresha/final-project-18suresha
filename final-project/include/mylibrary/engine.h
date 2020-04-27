@@ -9,12 +9,27 @@
 
 namespace mylibrary {
 
+struct FrameSize {
+	int width;
+	int height;
+};
+
+struct NeutralZone {
+	int x;
+	int y;
+	FrameSize frame_size;
+};
+
 class Engine {
 	public:
 		Engine();
 		void RunOpenCV();
+		bool IsNeutralZoneValid();
+		FrameSize GetCamFrameSize();
+		void SetNeutralZone(int x, int y, int width, int height);
 
 	private:
+		void SetCamFrameSize();
 		void StopOpenCV();
 		void SetPrevTimePoint(
 			const std::chrono::time_point<std::chrono::system_clock>& time_point) {
@@ -28,7 +43,12 @@ class Engine {
 		bool analyze_video_;
 		cv::VideoCapture cap_;
 		Keyboard keyboard_;
+		FrameSize cam_frame_size_;
 		std::chrono::time_point<std::chrono::system_clock> prev_time_point_;
+		NeutralZone neutral_zone_;
+		bool CheckNeutralStartingPoints();
+		bool CheckNeutralWidth();
+		bool CheckNeutralHeight();
 };
 
 }  // namespace mylibrary
