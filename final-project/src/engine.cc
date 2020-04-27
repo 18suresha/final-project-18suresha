@@ -4,11 +4,13 @@
 #include <opencv2/features2d.hpp>
 #include <chrono>
 #include <vector>
+#include <thread>
 #include <cinder/app/App.h>
 
 #include "mylibrary/engine.h"
 
 using namespace cv;
+using std::thread;
 
 namespace mylibrary {
 
@@ -74,12 +76,16 @@ namespace mylibrary {
                 Mat frame;
                 cap_ >> frame;
                 Mat filter_frame = FilterMat(frame);
-                AnalyzeSection(UP, filter_frame);
-                AnalyzeSection(RIGHT, filter_frame);
-                AnalyzeSection(DOWN, filter_frame);
-                AnalyzeSection(LEFT, filter_frame);
+                thread up(&Engine::AnalyzeSection, this, UP, filter_frame);
+                thread right(&Engine::AnalyzeSection, this, RIGHT, filter_frame);
+                thread down(&Engine::AnalyzeSection, this, DOWN, filter_frame);
+                thread left(&Engine::AnalyzeSection, this, LEFT, filter_frame);
                 // drawKeypoints(right_filter_frame, right_keypoints, right_feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
                 // imwrite("assets/" + std::to_string(counter++) + "_" + std::to_string(keypoints.size()) + ".png", right_frame);
+                up.join();
+                right.join();
+                down.join();
+                left.join();
                 Section sec = frame_dims[LEFT];
                 Rect roi(sec.x, sec.y, sec.frame_size.width, sec.frame_size.height);
                 Mat cropped_frame = filter_frame(roi);
