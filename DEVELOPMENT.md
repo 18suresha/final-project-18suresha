@@ -35,11 +35,10 @@
   - Implement splitting of frame into different areas
   - Implement creating average base threshold of keypoints when user not moving finger
 
-- **4/27/20** Modularized frame analysis, switched back to FAST feature detection, Used multithreading, identify all four finger movements with keyboard actions
+- **4/27/20** Modularized frame analysis, switched back to FAST feature detection, Used multithreading, identify all four finger movements with keyboard actions, implemented section thresholds to account for the user's physical setting'
   - Configure IDE to follow Google C++ Style Guide
   - Create documentaion on how to set up project in Visual Studio
   - Improve code quality
-  - Implement creating average base threshold of keypoints when user not moving finger
   - Add options for colors other than blue
   - Double check frame_dims calculations to make sure they never go beyond camera frame
 ---
