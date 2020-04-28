@@ -40,6 +40,8 @@ class Engine {
 		bool CheckNeutralWidth();
 		bool CheckNeutralHeight();
 		void AnalyzeSection(Direction dir, const cv::Mat& src_frame);
+		void SetThresholds();
+		cv::Mat FilterMat(const cv::Mat& src_frame) const;
 		void SetPrevTimePoint(
 			const std::chrono::time_point<std::chrono::system_clock>& time_point) {
 			prev_time_point_ = time_point;
@@ -56,6 +58,7 @@ class Engine {
 		std::chrono::time_point<std::chrono::system_clock> prev_time_point_;
 		Section neutral_zone_;	
 		std::map<Direction, Section> frame_dims;
+		std::map<Direction, int> section_thresholds;
 		std::map<Direction, std::vector<cv::KeyPoint>> section_keypoints;
 };
 

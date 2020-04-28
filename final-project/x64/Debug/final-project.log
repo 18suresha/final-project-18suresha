@@ -1,2 +1,13 @@
-﻿  engine.cc
+﻿  my_app.cc
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
+C:\Users\asure\Cinder\include\glad\glad.h(475): message : see previous definition of 'APIENTRY'
+  run.cc
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY': macro redefinition
+C:\Users\asure\Cinder\include\glad\glad.h(475): message : see previous definition of 'APIENTRY'
+  engine.cc
+C:\Users\asure\Cinder\my-projects\final-project-18suresha\final-project\src\engine.cc(44,67): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\asure\Cinder\my-projects\final-project-18suresha\final-project\src\engine.cc(45,73): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\asure\Cinder\my-projects\final-project-18suresha\final-project\src\engine.cc(46,71): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
+C:\Users\asure\Cinder\my-projects\final-project-18suresha\final-project\src\engine.cc(47,71): warning C4267: '+=': conversion from 'size_t' to 'int', possible loss of data
+  Generating Code...
   final-project.vcxproj -> C:\Users\asure\Cinder\my-projects\final-project-18suresha\x64\Debug\final-project.exe

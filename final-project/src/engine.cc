@@ -14,7 +14,7 @@ using std::thread;
 
 namespace mylibrary {
 
-    Engine::Engine() : analyze_video_{ false }, cap_{ 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() }, cam_frame_size_{SetCamFrameSize()} { 
+    Engine::Engine() : analyze_video_{ false }, cap_{ 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() }, cam_frame_size_{ SetCamFrameSize() }, section_thresholds{ {UP, 0}, {RIGHT, 0}, {DOWN, 0}, {LEFT, 0} } {
         neutral_zone_.x = cam_frame_size_.width / 3;
         neutral_zone_.frame_size.width = cam_frame_size_.width / 3;
         neutral_zone_.y = 7 * cam_frame_size_.height / 12;
@@ -23,6 +23,29 @@ namespace mylibrary {
         frame_dims[RIGHT] = Section{ neutral_zone_.x / 2, neutral_zone_.y, Size{neutral_zone_.x / 2, neutral_zone_.frame_size.height } };
         frame_dims[DOWN] = Section{ neutral_zone_.x, neutral_zone_.y + neutral_zone_.frame_size.height, Size{neutral_zone_.frame_size.width, (cam_frame_size_.height) - ((neutral_zone_.y + neutral_zone_.frame_size.height)) } };
         frame_dims[LEFT] = Section{ neutral_zone_.x + neutral_zone_.frame_size.width, neutral_zone_.y, Size{(cam_frame_size_.width / 2) - ((neutral_zone_.x + neutral_zone_.frame_size.width) / 2), neutral_zone_.frame_size.height } };
+    }
+
+    void Engine::SetThresholds() {
+        if (!cap_.isOpened()) {
+            return;
+        }
+        for (int i = 0; i < 10; i++) {
+            Mat frame;
+            cap_ >> frame;
+            Mat filter_frame = FilterMat(frame);
+            thread up(&Engine::AnalyzeSection, this, UP, filter_frame);
+            thread right(&Engine::AnalyzeSection, this, RIGHT, filter_frame);
+            thread down(&Engine::AnalyzeSection, this, DOWN, filter_frame);
+            thread left(&Engine::AnalyzeSection, this, LEFT, filter_frame);
+            up.join();
+            right.join();
+            down.join();
+            left.join();
+            section_thresholds[UP] += section_keypoints[UP].size();
+            section_thresholds[RIGHT] += section_keypoints[RIGHT].size();
+            section_thresholds[DOWN] += section_keypoints[DOWN].size();
+            section_thresholds[LEFT] += section_keypoints[LEFT].size();
+        }
     }
 
     Size Engine::SetCamFrameSize() {
@@ -43,7 +66,7 @@ namespace mylibrary {
         return neutral_zone_;
     }
 
-    Mat FilterMat(const Mat& src_frame) {
+    Mat Engine::FilterMat(const Mat& src_frame) const {
         Mat hsv_frame, filter_frame;
         cvtColor(src_frame, hsv_frame, COLOR_BGR2HSV);
         // filter orange
@@ -91,20 +114,20 @@ namespace mylibrary {
                 Mat feature_frame;
                 drawKeypoints(cropped_frame, section_keypoints[DOWN], feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
                 imshow("right", feature_frame);
-                if (section_keypoints[UP].size() > 10) {
+                if (section_keypoints[UP].size() > 10 + section_thresholds[UP]) {
                     keyboard_.ScrollUp();
                     SetPrevTimePoint(std::chrono::system_clock::now());
                     analyze_video_ = false;
                 }
-                else if (section_keypoints[RIGHT].size() > 4) {
+                else if (section_keypoints[RIGHT].size() > 4 + section_thresholds[RIGHT]) {
                     keyboard_.SwitchTabsRight();
                     SetPrevTimePoint(std::chrono::system_clock::now());
                     analyze_video_ = false;
-                } else if (section_keypoints[DOWN].size() > 10) {
+                } else if (section_keypoints[DOWN].size() > 10 + section_thresholds[DOWN]) {
                     keyboard_.ScrollDown();
                     SetPrevTimePoint(std::chrono::system_clock::now());
                     analyze_video_ = false;
-                } else if (section_keypoints[LEFT].size() > 4) {
+                } else if (section_keypoints[LEFT].size() > 4 + section_thresholds[LEFT]) {
                     keyboard_.SwitchTabsLeft();
                     SetPrevTimePoint(std::chrono::system_clock::now());
                     analyze_video_ = false;
