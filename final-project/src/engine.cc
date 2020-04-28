@@ -5,6 +5,7 @@
 #include <chrono>
 #include <vector>
 #include <thread>
+#include <initializer_list>
 #include <cinder/app/App.h>
 
 #include "mylibrary/engine.h"
@@ -14,37 +15,32 @@ using std::thread;
 
 namespace mylibrary {
 
-    Engine::Engine() : analyze_video_{ false }, cap_{ 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() }, cam_frame_size_{ SetCamFrameSize() }, section_thresholds{ {UP, 0}, {RIGHT, 0}, {DOWN, 0}, {LEFT, 0} } {
+    Engine::Engine() : analyze_video_{ false }, cap_{ 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() }, cam_frame_size_{ SetCamFrameSize() }, section_thresholds_{ {UP, 0}, {RIGHT, 0}, {DOWN, 0}, {LEFT, 0} } {
         neutral_zone_.x = cam_frame_size_.width / 3;
         neutral_zone_.frame_size.width = cam_frame_size_.width / 3;
         neutral_zone_.y = 7 * cam_frame_size_.height / 12;
         neutral_zone_.frame_size.height = cam_frame_size_.height / 5;
-        frame_dims[UP] = Section{ neutral_zone_.x, neutral_zone_.y / 2, Size{neutral_zone_.frame_size.width, neutral_zone_.y / 2} };
-        frame_dims[RIGHT] = Section{ neutral_zone_.x / 2, neutral_zone_.y, Size{neutral_zone_.x / 2, neutral_zone_.frame_size.height } };
-        frame_dims[DOWN] = Section{ neutral_zone_.x, neutral_zone_.y + neutral_zone_.frame_size.height, Size{neutral_zone_.frame_size.width, (cam_frame_size_.height) - ((neutral_zone_.y + neutral_zone_.frame_size.height)) } };
-        frame_dims[LEFT] = Section{ neutral_zone_.x + neutral_zone_.frame_size.width, neutral_zone_.y, Size{(cam_frame_size_.width / 2) - ((neutral_zone_.x + neutral_zone_.frame_size.width) / 2), neutral_zone_.frame_size.height } };
+        frame_dims_[UP] = Section{ neutral_zone_.x, neutral_zone_.y / 2, Size{neutral_zone_.frame_size.width, neutral_zone_.y / 2} };
+        frame_dims_[RIGHT] = Section{ neutral_zone_.x / 2, neutral_zone_.y, Size{neutral_zone_.x / 2, neutral_zone_.frame_size.height } };
+        frame_dims_[DOWN] = Section{ neutral_zone_.x, neutral_zone_.y + neutral_zone_.frame_size.height, Size{neutral_zone_.frame_size.width, (cam_frame_size_.height) - ((neutral_zone_.y + neutral_zone_.frame_size.height)) } };
+        frame_dims_[LEFT] = Section{ neutral_zone_.x + neutral_zone_.frame_size.width, neutral_zone_.y, Size{(cam_frame_size_.width / 2) - ((neutral_zone_.x + neutral_zone_.frame_size.width) / 2), neutral_zone_.frame_size.height } };
+        directions_ = { UP, RIGHT, DOWN, LEFT };
+        SetThresholds();
     }
 
     void Engine::SetThresholds() {
         if (!cap_.isOpened()) {
             return;
         }
-        for (int i = 0; i < 10; i++) {
-            Mat frame;
-            cap_ >> frame;
-            Mat filter_frame = FilterMat(frame);
-            thread up(&Engine::AnalyzeSection, this, UP, filter_frame);
-            thread right(&Engine::AnalyzeSection, this, RIGHT, filter_frame);
-            thread down(&Engine::AnalyzeSection, this, DOWN, filter_frame);
-            thread left(&Engine::AnalyzeSection, this, LEFT, filter_frame);
-            up.join();
-            right.join();
-            down.join();
-            left.join();
-            section_thresholds[UP] += section_keypoints[UP].size();
-            section_thresholds[RIGHT] += section_keypoints[RIGHT].size();
-            section_thresholds[DOWN] += section_keypoints[DOWN].size();
-            section_thresholds[LEFT] += section_keypoints[LEFT].size();
+        for (Direction dir : directions_) {
+            for (int i = 50; i < 50; i++) {
+                Mat frame;
+                cap_ >> frame;
+                Mat filter_frame = FilterMat(frame);
+                AnalyzeSection(dir, filter_frame);
+                section_thresholds_[dir] += section_keypoints_[dir].size();
+            }
+            section_thresholds_[dir] /= 50.0;
         }
     }
 
@@ -76,15 +72,51 @@ namespace mylibrary {
         return filter_frame;
     }
 
+    void Engine::AnalyzeSections(const cv::Mat& src_frame) {
+        Mat filter_frame = FilterMat(src_frame);
+        thread up(&Engine::AnalyzeSection, this, UP, filter_frame);
+        thread right(&Engine::AnalyzeSection, this, RIGHT, filter_frame);
+        thread down(&Engine::AnalyzeSection, this, DOWN, filter_frame);
+        thread left(&Engine::AnalyzeSection, this, LEFT, filter_frame);
+        up.join();
+        right.join();
+        down.join();
+        left.join();
+    }
+
     void Engine::AnalyzeSection(Direction dir, const Mat& src_frame) {
-        Section sec = frame_dims[dir];
+        Section sec = frame_dims_[dir];
         Rect roi(sec.x, sec.y, sec.frame_size.width, sec.frame_size.height);
         Mat cropped_frame = src_frame(roi);
         Ptr<FeatureDetector> detector = ORB::create();  
-        FAST(cropped_frame, section_keypoints[dir], 0, false);
+        FAST(cropped_frame, section_keypoints_[dir], 0, false);
         // take feature_frame out?
         Mat feature_frame;
         //detector->detectAndCompute(cropped_frame, feature_frame, section_keypoints[dir], noArray(), false);
+    }
+
+    void Engine::OnKeyboardInput() {
+        prev_time_point_ = std::chrono::system_clock::now();
+        analyze_video_ = false;
+    }
+
+    void Engine::AnalyzeFingerMovement() {
+        if (section_keypoints_[UP].size() > 10 + ((int)section_thresholds_[UP])) {
+            keyboard_.ScrollUp();
+            OnKeyboardInput();
+        }
+        else if (section_keypoints_[RIGHT].size() > 4 + ((int)section_thresholds_[RIGHT])) {
+            keyboard_.SwitchTabsRight();
+            OnKeyboardInput();
+        }
+        else if (section_keypoints_[DOWN].size() > 10 + ((int)section_thresholds_[DOWN])) {
+            keyboard_.ScrollDown();
+            OnKeyboardInput();
+        }
+        else if (section_keypoints_[LEFT].size() > 4 + ((int)section_thresholds_[LEFT])) {
+            keyboard_.SwitchTabsLeft();
+            OnKeyboardInput();
+        }
     }
 
 	void Engine::RunOpenCV() {
@@ -96,45 +128,18 @@ namespace mylibrary {
             if (analyze_video_) {
                 Mat frame;
                 cap_ >> frame;
-                Mat filter_frame = FilterMat(frame);
-                thread up(&Engine::AnalyzeSection, this, UP, filter_frame);
-                thread right(&Engine::AnalyzeSection, this, RIGHT, filter_frame);
-                thread down(&Engine::AnalyzeSection, this, DOWN, filter_frame);
-                thread left(&Engine::AnalyzeSection, this, LEFT, filter_frame);
-                // drawKeypoints(right_filter_frame, right_keypoints, right_feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
-                // imwrite("assets/" + std::to_string(counter++) + "_" + std::to_string(keypoints.size()) + ".png", right_frame);
-                up.join();
-                right.join();
-                down.join();
-                left.join();
-                Section sec = frame_dims[DOWN];
-                Rect roi(sec.x, sec.y, sec.frame_size.width, sec.frame_size.height);
-                Mat cropped_frame = filter_frame(roi);
-                // take feature_frame out?
-                Mat feature_frame;
-                drawKeypoints(cropped_frame, section_keypoints[DOWN], feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
-                imshow("right", feature_frame);
-                if (section_keypoints[UP].size() > 10 + section_thresholds[UP]) {
-                    keyboard_.ScrollUp();
-                    SetPrevTimePoint(std::chrono::system_clock::now());
-                    analyze_video_ = false;
-                }
-                else if (section_keypoints[RIGHT].size() > 4 + section_thresholds[RIGHT]) {
-                    keyboard_.SwitchTabsRight();
-                    SetPrevTimePoint(std::chrono::system_clock::now());
-                    analyze_video_ = false;
-                } else if (section_keypoints[DOWN].size() > 10 + section_thresholds[DOWN]) {
-                    keyboard_.ScrollDown();
-                    SetPrevTimePoint(std::chrono::system_clock::now());
-                    analyze_video_ = false;
-                } else if (section_keypoints[LEFT].size() > 4 + section_thresholds[LEFT]) {
-                    keyboard_.SwitchTabsLeft();
-                    SetPrevTimePoint(std::chrono::system_clock::now());
-                    analyze_video_ = false;
-                }
+                AnalyzeSections(frame);
+                //Section sec = frame_dims[DOWN];
+                //Rect roi(sec.x, sec.y, sec.frame_size.width, sec.frame_size.height);
+                //Mat cropped_frame = filter_frame(roi);
+                //// take feature_frame out?
+                //Mat feature_frame;
+                //drawKeypoints(cropped_frame, section_keypoints[DOWN], feature_frame, Scalar::all(-1), DrawMatchesFlags::DEFAULT);
+                //imshow("right", feature_frame);
+                AnalyzeFingerMovement();
             }
             if (std::chrono::duration<double>(std::chrono::system_clock::now() -
-                GetPrevTimePoint()).count() > 1) {
+                prev_time_point_).count() > 1) {
                 analyze_video_ = true;
             }
             /*if (waitKey(30) == 'q') {
@@ -144,7 +149,6 @@ namespace mylibrary {
        // }
 	}
     void Engine::DisplayNeutralZone() {
-
         if (!cap_.isOpened()) {
             return;
         }

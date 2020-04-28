@@ -5,6 +5,7 @@
 #include <chrono>
 #include <opencv2/opencv.hpp>
 #include <vector>
+#include <initializer_list>
 
 #include "mylibrary/keyboard.h"
 
@@ -39,16 +40,12 @@ class Engine {
 		bool CheckNeutralStartingPoints();
 		bool CheckNeutralWidth();
 		bool CheckNeutralHeight();
+		void AnalyzeSections(const cv::Mat& src_frame);
 		void AnalyzeSection(Direction dir, const cv::Mat& src_frame);
 		void SetThresholds();
 		cv::Mat FilterMat(const cv::Mat& src_frame) const;
-		void SetPrevTimePoint(
-			const std::chrono::time_point<std::chrono::system_clock>& time_point) {
-			prev_time_point_ = time_point;
-		}
-		std::chrono::time_point<std::chrono::system_clock> GetPrevTimePoint() const {
-			return prev_time_point_;
-		}
+		void AnalyzeFingerMovement();
+		void OnKeyboardInput();
 
 	private:
 		bool analyze_video_;
@@ -57,9 +54,10 @@ class Engine {
 		const cv::Size cam_frame_size_;
 		std::chrono::time_point<std::chrono::system_clock> prev_time_point_;
 		Section neutral_zone_;	
-		std::map<Direction, Section> frame_dims;
-		std::map<Direction, int> section_thresholds;
-		std::map<Direction, std::vector<cv::KeyPoint>> section_keypoints;
+		std::initializer_list<Direction> directions_;
+		std::map<Direction, Section> frame_dims_;
+		std::map<Direction, double> section_thresholds_;
+		std::map<Direction, std::vector<cv::KeyPoint>> section_keypoints_;
 };
 
 }  // namespace mylibrary
