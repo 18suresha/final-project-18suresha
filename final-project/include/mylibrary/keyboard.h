@@ -15,6 +15,7 @@ class Keyboard {
 		void ScrollDown();
 
 	private:
+		size_t scroll_amount_;
 		INPUT ip_;
 		INPUT ip1_;
 		INPUT ip2_;
