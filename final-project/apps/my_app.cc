@@ -35,8 +35,6 @@ namespace myapp {
 		ImGui::RadioButton("Blue", &color_, mylibrary::ColorToUse_::ColorToUse_Blue);
 		ImGui::SameLine();
 		ImGui::RadioButton("Orange", &color_, mylibrary::ColorToUse_::ColorToUse_Orange);
-		ImGui::SameLine();
-		ImGui::RadioButton("Green", &color_, mylibrary::ColorToUse_::ColorToUse_Green);
 
 		ImGui::InputInt("Starting X Position of Neutral Zone", &neutral_zone_.x);
 		ImGui::InputInt("Starting Y Position of Neutral Zone", &neutral_zone_.y);

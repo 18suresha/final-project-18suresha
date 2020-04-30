@@ -16,7 +16,6 @@ typedef int ColorToUse;
 enum ColorToUse_ {
 	ColorToUse_Blue = 0,
 	ColorToUse_Orange = 1,
-	ColorToUse_Green = 2
 };
 
 enum Direction {

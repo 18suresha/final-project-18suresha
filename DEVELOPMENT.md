@@ -49,4 +49,13 @@
   - Add options for colors other than blue
   - Double check frame_dims calculations to make sure they never go beyond camera frame
   - Write tests
+
+- **4/29/20** Added option to use orange color on finger, Added radio buttons to GUI for color choice
+  - Configure IDE to follow Google C++ Style Guide
+  - Create documentaion on how to set up project in Visual Studio
+  - Improve code quality
+  - Add third color option
+  - Work on distinguishing between orange on finger and appearance of orange on bright skin.
+  - Double check frame_dims calculations to make sure they never go beyond camera frame
+  - Write tests
 ---

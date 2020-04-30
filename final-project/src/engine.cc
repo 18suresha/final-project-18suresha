@@ -15,7 +15,7 @@ using std::thread;
 
 namespace mylibrary {
 
-    Engine::Engine() : analyze_video_{ false }, color_{ColorToUse_Blue}, cap_{ 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() }, cam_frame_size_{ SetCamFrameSize() }, section_thresholds_{ {UP, 0}, {RIGHT, 0}, {DOWN, 0}, {LEFT, 0} } {
+    Engine::Engine() : analyze_video_{ false }, color_{ColorToUse_Blue}, cap_{ 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() }, cam_frame_size_{ SetCamFrameSize() } {
         neutral_zone_.x = cam_frame_size_.width / 3;
         neutral_zone_.frame_size.width = cam_frame_size_.width / 3;
         neutral_zone_.y = 7 * cam_frame_size_.height / 12;
@@ -33,6 +33,7 @@ namespace mylibrary {
             return;
         }
         for (Direction dir : directions_) {
+            section_thresholds_[dir] = 0;
             for (int i = 50; i < 50; i++) {
                 Mat frame;
                 cap_ >> frame;
@@ -103,7 +104,13 @@ namespace mylibrary {
     }
 
     void Engine::SetColorToUse(ColorToUse color) {
-        color_ = color;
+        if (color_ != color) {
+            color_ = color;
+            SetThresholds();
+        }
+        else {
+            color_ = color;
+        }
     }
 
     void Engine::AnalyzeFingerMovement() {
