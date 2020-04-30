@@ -66,9 +66,9 @@ namespace mylibrary {
         Mat hsv_frame, filter_frame;
         cvtColor(src_frame, hsv_frame, COLOR_BGR2HSV);
         // filter orange
-        // inRange(hsv_frame, Scalar(13, 100, 100), Scalar(17, 255, 255), filter_frame);
-        // filter orange
-        inRange(hsv_frame, Scalar(110, 210, 80), Scalar(120, 255, 225), filter_frame);
+         inRange(hsv_frame, Scalar(5, 210, 120), Scalar(10, 255, 225), filter_frame);
+        // filter blue
+        // inRange(hsv_frame, Scalar(110, 210, 80), Scalar(120, 255, 225), filter_frame);
         return filter_frame;
     }
 
