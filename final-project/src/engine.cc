@@ -15,7 +15,7 @@ using std::thread;
 
 namespace mylibrary {
 
-    Engine::Engine() : analyze_video_{ false }, cap_{ 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() }, cam_frame_size_{ SetCamFrameSize() }, section_thresholds_{ {UP, 0}, {RIGHT, 0}, {DOWN, 0}, {LEFT, 0} } {
+    Engine::Engine() : analyze_video_{ false }, color_{ColorToUse_Blue}, cap_{ 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() }, cam_frame_size_{ SetCamFrameSize() }, section_thresholds_{ {UP, 0}, {RIGHT, 0}, {DOWN, 0}, {LEFT, 0} } {
         neutral_zone_.x = cam_frame_size_.width / 3;
         neutral_zone_.frame_size.width = cam_frame_size_.width / 3;
         neutral_zone_.y = 7 * cam_frame_size_.height / 12;
@@ -65,10 +65,12 @@ namespace mylibrary {
     Mat Engine::FilterMat(const Mat& src_frame) const {
         Mat hsv_frame, filter_frame;
         cvtColor(src_frame, hsv_frame, COLOR_BGR2HSV);
-        // filter orange
-         inRange(hsv_frame, Scalar(5, 210, 120), Scalar(10, 255, 225), filter_frame);
-        // filter blue
-        // inRange(hsv_frame, Scalar(110, 210, 80), Scalar(120, 255, 225), filter_frame);
+        if (color_ == ColorToUse_Blue) {
+            inRange(hsv_frame, Scalar(110, 210, 80), Scalar(120, 255, 225), filter_frame);
+        }
+        else if (color_ == ColorToUse_Orange) {
+            inRange(hsv_frame, Scalar(5, 210, 120), Scalar(10, 255, 225), filter_frame);
+        }
         return filter_frame;
     }
 
@@ -98,6 +100,10 @@ namespace mylibrary {
     void Engine::OnKeyboardInput() {
         prev_time_point_ = std::chrono::system_clock::now();
         analyze_video_ = false;
+    }
+
+    void Engine::SetColorToUse(ColorToUse color) {
+        color_ = color;
     }
 
     void Engine::AnalyzeFingerMovement() {

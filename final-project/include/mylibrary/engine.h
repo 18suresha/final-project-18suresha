@@ -11,10 +11,12 @@
 
 namespace mylibrary {
 
-struct Section {
-	int x;
-	int y;
-	cv::Size frame_size;
+typedef int ColorToUse;
+
+enum ColorToUse_ {
+	ColorToUse_Blue = 0,
+	ColorToUse_Orange = 1,
+	ColorToUse_Green = 2
 };
 
 enum Direction {
@@ -22,6 +24,12 @@ enum Direction {
 	RIGHT,
 	DOWN,
 	LEFT
+};
+
+struct Section {
+	int x;
+	int y;
+	cv::Size frame_size;
 };
 
 class Engine {
@@ -33,6 +41,7 @@ class Engine {
 		cv::Size GetCamFrameSize();
 		void SetNeutralZone(Section neutral_zone);
 		Section GetNeutralZone();
+		void SetColorToUse(ColorToUse color);
 
 	private:
 		cv::Size SetCamFrameSize();
@@ -49,6 +58,7 @@ class Engine {
 
 	private:
 		bool analyze_video_;
+		ColorToUse color_;
 		cv::VideoCapture cap_;
 		Keyboard keyboard_;
 		const cv::Size cam_frame_size_;

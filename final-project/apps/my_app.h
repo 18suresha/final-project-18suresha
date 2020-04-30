@@ -6,6 +6,7 @@
 #include <cinder/app/App.h>
 #include "cinder/gl/gl.h"
 #include "mylibrary/engine.h"
+#include <cinder/CinderImGui.h>
 
 
 namespace myapp {
@@ -26,6 +27,7 @@ namespace myapp {
         int neutral_width_;
         int neutral_height_;
         bool run_opencv_;
+        mylibrary::ColorToUse color_;
         mylibrary::Section neutral_zone_;
         std::string cam_width_text_;
         std::string cam_height_text_;
