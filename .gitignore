@@ -143,6 +143,8 @@ _deps
 
 # Visual Studio Build
 x64/
+final-project/x64/
+test-final-project/x64/
 .vs/
 
 # Images
