@@ -50,6 +50,7 @@ class Engine {
 		bool CheckNeutralHeight();
 		void AnalyzeSections(const cv::Mat& src_frame);
 		void AnalyzeSection(Direction dir, const cv::Mat& src_frame);
+		void AnalyzeSectionPixels(Direction dir, const cv::Mat& src_frame);
 		void SetThresholds();
 		cv::Mat FilterMat(const cv::Mat& src_frame) const;
 		void AnalyzeFingerMovement();
@@ -67,6 +68,7 @@ class Engine {
 		std::map<Direction, Section> frame_dims_;
 		std::map<Direction, double> section_thresholds_;
 		std::map<Direction, std::vector<cv::KeyPoint>> section_keypoints_;
+		std::map<Direction, int> section_pixels_;
 };
 
 }  // namespace mylibrary
