@@ -141,6 +141,10 @@ _deps
 # External projects
 *-prefix/
 
+# IDE Configurations
+.idea/
+openCV-python/.idea/
+
 # Visual Studio Build
 x64/
 final-project/x64/
