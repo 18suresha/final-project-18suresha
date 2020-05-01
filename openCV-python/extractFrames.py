@@ -41,7 +41,7 @@ def FrameCapture(path):
             upper_blue = np.array([118, 255, 255])
 
             # Threshold the HSV image to get only blue colors
-            mask = cv2.inRange(hsv, lower_blue, upper_blue)
+            mask = cv2.inRange(hsv, lower_orange, upper_orange)
             cv2.imshow("filtered", mask)
             cv2.imshow("cropped", cropped_img)
             # Saves the frames with frame-count

@@ -59,9 +59,10 @@
   - Double check frame_dims calculations to make sure they never go beyond camera frame
   - Write tests
 
-- **2/1/20** Added option to use orange color on finger, Added radio buttons to GUI for color choice
+- **5/1/20** Used feature points instead of keypoints in order to detect change in number of pixels of chosen color
   - Configure IDE to follow Google C++ Style Guide
   - Create documentaion on how to set up project in Visual Studio
+  - Mention specifications of netural zone preferably being user's head and using well-sized markers on finger in documentation
   - Improve code quality
   - Add third color option
   - Work on distinguishing between orange on finger and appearance of orange on bright skin.

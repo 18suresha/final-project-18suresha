@@ -134,17 +134,14 @@ namespace mylibrary {
         if (section_pixels_[UP] > 100 + ((int)section_thresholds_[UP])) {
             keyboard_.ScrollUp();
             OnKeyboardInput();
-        }
-        else if (section_pixels_[RIGHT] > 100 + ((int)section_thresholds_[RIGHT])) {
+        } else if (section_pixels_[RIGHT] > 100 + ((int)section_thresholds_[RIGHT])) {
             keyboard_.SwitchTabsRight();
             OnKeyboardInput();
-        }
-        else if (section_pixels_[DOWN] > 100 + ((int)section_thresholds_[DOWN])) {
-            keyboard_.ScrollDown();
-            OnKeyboardInput();
-        }
-        else if (section_pixels_[LEFT] > 100 + ((int)section_thresholds_[LEFT])) {
+        } else if (section_pixels_[LEFT] > 100 + ((int)section_thresholds_[LEFT])) {
             keyboard_.SwitchTabsLeft();
+            OnKeyboardInput();
+        } else if (section_pixels_[DOWN] > 100 + ((int)section_thresholds_[DOWN])) {
+            keyboard_.ScrollDown();
             OnKeyboardInput();
         }
     }
