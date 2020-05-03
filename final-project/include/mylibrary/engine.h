@@ -5,7 +5,6 @@
 #include <chrono>
 #include <opencv2/opencv.hpp>
 #include <vector>
-#include <initializer_list>
 
 #include "mylibrary/keyboard.h"
 
@@ -15,7 +14,12 @@ typedef int ColorToUse;
 
 enum ColorToUse_ {
 	ColorToUse_Blue = 0,
-	ColorToUse_Orange = 1,
+	ColorToUse_Red = 1
+};
+
+struct ColorRange {
+	cv::Scalar lower;
+	cv::Scalar upper;
 };
 
 enum Direction {
@@ -29,6 +33,7 @@ class Engine {
 	public:
 		Engine();
 		void RunOpenCV();
+		void StopOpenCV();
 		void DisplayNeutralZone();
 		bool IsNeutralZoneValid();
 		cv::Size GetCamFrameSize();
@@ -38,7 +43,6 @@ class Engine {
 
 	private:
 		cv::Size SetCamFrameSize();
-		void StopOpenCV();
 		bool CheckNeutralStartingPoints();
 		bool CheckNeutralWidth();
 		bool CheckNeutralHeight();
@@ -52,17 +56,17 @@ class Engine {
 
 	private:
 		bool analyze_video_;
-		ColorToUse color_;
+		ColorToUse color_to_use_;
 		cv::VideoCapture cap_;
 		Keyboard keyboard_;
 		const cv::Size cam_frame_size_;
 		std::chrono::time_point<std::chrono::system_clock> prev_time_point_;
 		cv::Rect neutral_zone_;	
-		std::initializer_list<Direction> directions_;
 		std::map<Direction, cv::Rect> frame_dims_;
 		std::map<Direction, double> section_thresholds_;
 		std::map<Direction, std::vector<cv::KeyPoint>> section_keypoints_;
 		std::map<Direction, int> section_pixels_;
+		std::vector<ColorRange> color_ranges_;
 };
 
 }  // namespace mylibrary
