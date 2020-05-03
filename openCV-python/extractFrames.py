@@ -27,7 +27,7 @@ def FrameCapture(path):
             # left
             cropped_left = frame[280:376, 426:533]
 
-            cropped_img = cropped_down
+            cropped_img = cropped_up
 
             # Convert BGR to HSV
             hsv = cv2.cvtColor(cropped_img, cv2.COLOR_BGR2HSV)
@@ -41,8 +41,8 @@ def FrameCapture(path):
             upper_blue = np.array([118, 255, 255])
 
             # define range of red color in HSV
-            lower_red = np.array([0, 150, 150])
-            upper_red = np.array([4, 255, 255])
+            lower_red = np.array([0, 120, 120])
+            upper_red = np.array([5, 255, 255])
 
             # Threshold the HSV image to get only blue colors
             mask = cv2.inRange(hsv, lower_red, upper_red)
