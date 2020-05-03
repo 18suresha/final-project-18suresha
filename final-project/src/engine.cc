@@ -22,24 +22,12 @@ Engine::Engine()
                                                               {DOWN, 0},
                                                               {LEFT, 0}},
       section_pixels_{{UP, 0}, {RIGHT, 0}, {DOWN, 0}, {LEFT, 0}},
-      color_ranges_{ColorRange{Scalar(0, 150, 100), Scalar(4, 255, 225)},
-                    ColorRange{Scalar(0, 150, 100), Scalar(4, 255, 225)}} {
+      color_ranges_{ColorRange{Scalar(105, 150, 80), Scalar(118, 255, 225)},
+                    ColorRange{Scalar(0, 150, 150), Scalar(4, 255, 225)}} {
   neutral_zone_ =
       Rect{cam_frame_size_.width / 3, 5 * cam_frame_size_.height / 12,
            7 * cam_frame_size_.width / 24, cam_frame_size_.height / 4};
-  frame_dims_[UP] =
-      Rect{neutral_zone_.x, 0, neutral_zone_.width, neutral_zone_.y};
-  frame_dims_[RIGHT] =
-      Rect{0, neutral_zone_.y, neutral_zone_.x, neutral_zone_.height};
-  frame_dims_[DOWN] = Rect{
-      neutral_zone_.x, neutral_zone_.y + neutral_zone_.height,
-      neutral_zone_.width,
-      (cam_frame_size_.height) - ((neutral_zone_.y + neutral_zone_.height))};
-  frame_dims_[LEFT] =
-      Rect{neutral_zone_.x + neutral_zone_.width, neutral_zone_.y,
-           (cam_frame_size_.width) - ((neutral_zone_.x + neutral_zone_.width)),
-           neutral_zone_.height};
-  SetThresholds();
+  Calibrate();
 }
 
 void Engine::SetThresholds() {
@@ -67,6 +55,22 @@ void Engine::SetThresholds() {
   section_thresholds_[RIGHT] /= 150.0;
   section_thresholds_[DOWN] /= 150.0;
   section_thresholds_[LEFT] /= 150.0;
+}
+
+void Engine::Calibrate() {
+    frame_dims_[UP] =
+        Rect{ neutral_zone_.x, 0, neutral_zone_.width, neutral_zone_.y };
+    frame_dims_[RIGHT] =
+        Rect{ 0, neutral_zone_.y, neutral_zone_.x, neutral_zone_.height };
+    frame_dims_[DOWN] = Rect{
+        neutral_zone_.x, neutral_zone_.y + neutral_zone_.height,
+        neutral_zone_.width,
+        (cam_frame_size_.height) - ((neutral_zone_.y + neutral_zone_.height)) };
+    frame_dims_[LEFT] =
+        Rect{ neutral_zone_.x + neutral_zone_.width, neutral_zone_.y,
+             (cam_frame_size_.width) - ((neutral_zone_.x + neutral_zone_.width)),
+             neutral_zone_.height };
+    SetThresholds();
 }
 
 Size Engine::SetCamFrameSize() {
@@ -119,12 +123,7 @@ void Engine::OnKeyboardInput() {
 }
 
 void Engine::SetColorToUse(ColorToUse color) {
-  if (color_to_use_ != color) {
-    color_to_use_ = color;
-    SetThresholds();
-  } else {
-    color_to_use_ = color;
-  }
+  color_to_use_ = color;
 }
 
 void Engine::AnalyzeFingerMovement() {
@@ -147,8 +146,6 @@ void Engine::RunOpenCV() {
   if (!cap_.isOpened()) {
     return;
   }
-  int counter = 0;
-  // while (1) {
   if (analyze_video_) {
     Mat frame;
     cap_ >> frame;
@@ -161,7 +158,7 @@ void Engine::RunOpenCV() {
     analyze_video_ = true;
   }
 }
-void Engine::DisplayNeutralZone() {
+void Engine::DisplaySections() {
   if (!cap_.isOpened()) {
     return;
   }

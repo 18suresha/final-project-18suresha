@@ -34,12 +34,13 @@ class Engine {
 		Engine();
 		void RunOpenCV();
 		void StopOpenCV();
-		void DisplayNeutralZone();
+		void DisplaySections();
 		bool IsNeutralZoneValid();
 		cv::Size GetCamFrameSize();
 		void SetNeutralZone(cv::Rect neutral_zone);
 		cv::Rect GetNeutralZone();
 		void SetColorToUse(ColorToUse color);
+		void Calibrate();
 
 	private:
 		cv::Size SetCamFrameSize();
