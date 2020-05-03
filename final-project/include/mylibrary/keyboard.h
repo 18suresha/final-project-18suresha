@@ -7,21 +7,20 @@
 namespace mylibrary {
 
 class Keyboard {
-	public:
-		Keyboard();
-		void SwitchTabsRight();
-		void SwitchTabsLeft();
-		void ScrollUp();
-		void ScrollDown();
+public:
+  Keyboard();
+  void SwitchTabsRight();
+  void SwitchTabsLeft();
+  void ScrollUp();
+  void ScrollDown();
 
-	private:
-		size_t scroll_amount_;
-		INPUT ip_;
-		INPUT ip1_;
-		INPUT ip2_;
+private:
+  size_t scroll_amount_;
+  INPUT ip_;
+  INPUT ip1_;
+  INPUT ip2_;
 };
 
-}  // namespace mylibrary
-
+} // namespace mylibrary
 
 #endif // FINALPROJECT_MYLIBRARY_KEYBOARD_H_

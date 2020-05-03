@@ -101,13 +101,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\asure\Cinder\include;C:\Users\asure\Cinder\my-projects\final-project-18suresha\final-project\apps;C:\Users\asure\Cinder\my-projects\final-project-18suresha\final-project\include;C:\Users\asure\Downloads\opencv\build\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;apps;include;C:\Users\asure\Downloads\opencv\build\include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\asure\Cinder\lib\msw\$(PlatformTarget);C:\Users\asure\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)\$(PlatformToolset);C:\Users\asure\Downloads\opencv\build\x64\vc15\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\lib\msw\$(PlatformTarget);..\..\..\lib\msw\$(PlatformTarget)\$(Configuration)\$(PlatformToolset);C:\Users\asure\Downloads\opencv\build\x64\vc15\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>cinder.lib;OpenGL32.lib;opencv_world420d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -147,13 +147,11 @@
     <ClCompile Include="apps\my_app.cc" />
     <ClCompile Include="apps\run.cc" />
     <ClCompile Include="src\engine.cc" />
-    <ClCompile Include="src\example.cc" />
     <ClCompile Include="src\keyboard.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="apps\my_app.h" />
     <ClInclude Include="include\mylibrary\engine.h" />
-    <ClInclude Include="include\mylibrary\example.h" />
     <ClInclude Include="include\mylibrary\keyboard.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

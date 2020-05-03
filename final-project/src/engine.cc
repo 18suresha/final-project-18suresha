@@ -23,7 +23,8 @@ Engine::Engine()
                                                               {LEFT, 0}},
       section_pixels_{{UP, 0}, {RIGHT, 0}, {DOWN, 0}, {LEFT, 0}},
       color_ranges_{ColorRange{Scalar(105, 150, 80), Scalar(118, 255, 225)},
-                    ColorRange{Scalar(0, 150, 150), Scalar(4, 255, 225)}} {
+                    ColorRange{Scalar(0, 150, 150), Scalar(4, 255, 225)}},
+      num_threshold_samples_{150}, threshold_offset_{100} {
   neutral_zone_ =
       Rect{cam_frame_size_.width / 3, 5 * cam_frame_size_.height / 12,
            7 * cam_frame_size_.width / 24, cam_frame_size_.height / 4};
@@ -34,7 +35,7 @@ void Engine::SetThresholds() {
   if (!cap_.isOpened()) {
     return;
   }
-  for (int i = 0; i < 150; i++) {
+  for (int i = 0; i < num_threshold_samples_; i++) {
     Mat frame;
     cap_ >> frame;
     Mat filter_frame = FilterMat(frame);
@@ -51,26 +52,26 @@ void Engine::SetThresholds() {
     section_thresholds_[DOWN] += section_pixels_[DOWN];
     section_thresholds_[LEFT] += section_pixels_[LEFT];
   }
-  section_thresholds_[UP] /= 150.0;
-  section_thresholds_[RIGHT] /= 150.0;
-  section_thresholds_[DOWN] /= 150.0;
-  section_thresholds_[LEFT] /= 150.0;
+  section_thresholds_[UP] /= num_threshold_samples_;
+  section_thresholds_[RIGHT] /= num_threshold_samples_;
+  section_thresholds_[DOWN] /= num_threshold_samples_;
+  section_thresholds_[LEFT] /= num_threshold_samples_;
 }
 
 void Engine::Calibrate() {
-    frame_dims_[UP] =
-        Rect{ neutral_zone_.x, 0, neutral_zone_.width, neutral_zone_.y };
-    frame_dims_[RIGHT] =
-        Rect{ 0, neutral_zone_.y, neutral_zone_.x, neutral_zone_.height };
-    frame_dims_[DOWN] = Rect{
-        neutral_zone_.x, neutral_zone_.y + neutral_zone_.height,
-        neutral_zone_.width,
-        (cam_frame_size_.height) - ((neutral_zone_.y + neutral_zone_.height)) };
-    frame_dims_[LEFT] =
-        Rect{ neutral_zone_.x + neutral_zone_.width, neutral_zone_.y,
-             (cam_frame_size_.width) - ((neutral_zone_.x + neutral_zone_.width)),
-             neutral_zone_.height };
-    SetThresholds();
+  frame_dims_[UP] =
+      Rect{neutral_zone_.x, 0, neutral_zone_.width, neutral_zone_.y};
+  frame_dims_[RIGHT] =
+      Rect{0, neutral_zone_.y, neutral_zone_.x, neutral_zone_.height};
+  frame_dims_[DOWN] = Rect{
+      neutral_zone_.x, neutral_zone_.y + neutral_zone_.height,
+      neutral_zone_.width,
+      (cam_frame_size_.height) - ((neutral_zone_.y + neutral_zone_.height))};
+  frame_dims_[LEFT] =
+      Rect{neutral_zone_.x + neutral_zone_.width, neutral_zone_.y,
+           (cam_frame_size_.width) - ((neutral_zone_.x + neutral_zone_.width)),
+           neutral_zone_.height};
+  SetThresholds();
 }
 
 Size Engine::SetCamFrameSize() {
@@ -122,21 +123,23 @@ void Engine::OnKeyboardInput() {
   analyze_video_ = false;
 }
 
-void Engine::SetColorToUse(ColorToUse color) {
-  color_to_use_ = color;
-}
+void Engine::SetColorToUse(ColorToUse color) { color_to_use_ = color; }
 
 void Engine::AnalyzeFingerMovement() {
-  if (section_pixels_[UP] > 100 + ((int)section_thresholds_[UP])) {
+  if (section_pixels_[UP] >
+      threshold_offset_ + ((int)section_thresholds_[UP])) {
     keyboard_.ScrollUp();
     OnKeyboardInput();
-  } else if (section_pixels_[RIGHT] > 100 + ((int)section_thresholds_[RIGHT])) {
+  } else if (section_pixels_[RIGHT] >
+             threshold_offset_ + ((int)section_thresholds_[RIGHT])) {
     keyboard_.SwitchTabsRight();
     OnKeyboardInput();
-  } else if (section_pixels_[LEFT] > 100 + ((int)section_thresholds_[LEFT])) {
+  } else if (section_pixels_[LEFT] >
+             threshold_offset_ + ((int)section_thresholds_[LEFT])) {
     keyboard_.SwitchTabsLeft();
     OnKeyboardInput();
-  } else if (section_pixels_[DOWN] > 100 + ((int)section_thresholds_[DOWN])) {
+  } else if (section_pixels_[DOWN] >
+             threshold_offset_ + ((int)section_thresholds_[DOWN])) {
     keyboard_.ScrollDown();
     OnKeyboardInput();
   }

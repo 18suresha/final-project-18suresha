@@ -21,9 +21,6 @@
     <ClCompile Include="apps\run.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\example.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\engine.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -33,9 +30,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="apps\my_app.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\mylibrary\example.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\mylibrary\engine.h">

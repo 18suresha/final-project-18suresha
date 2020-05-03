@@ -27,8 +27,8 @@ void MyApp::setup() { ImGui::Initialize(); }
 void MyApp::update() {
   bool display_sections = false;
   bool calibrate = false;
-  if (ImGui::BeginMenu("Component to Run")) {
-    ImGui::MenuItem("ORB", nullptr, &run_opencv_);
+  if (ImGui::BeginMenu("Actions")) {
+    ImGui::MenuItem("Run", nullptr, &run_opencv_);
     ImGui::MenuItem("Display Sections", nullptr, &display_sections);
     ImGui::MenuItem("Calibrate", nullptr, &calibrate);
     ImGui::EndMenu();
