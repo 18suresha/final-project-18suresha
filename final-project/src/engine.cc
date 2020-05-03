@@ -9,7 +9,10 @@
 
 #include "mylibrary/engine.h"
 
-using namespace cv;
+using cv::Mat;
+using cv::Scalar;
+using cv::Rect;
+using cv::Size;
 using std::thread;
 
 namespace mylibrary {
@@ -90,7 +93,7 @@ Rect Engine::GetNeutralZone() { return neutral_zone_; }
 
 Mat Engine::FilterMat(const Mat &src_frame) const {
   Mat hsv_frame, filter_frame;
-  cvtColor(src_frame, hsv_frame, COLOR_BGR2HSV);
+  cvtColor(src_frame, hsv_frame, cv::COLOR_BGR2HSV);
   inRange(hsv_frame, color_ranges_[color_to_use_].lower,
           color_ranges_[color_to_use_].upper, filter_frame);
   return filter_frame;
@@ -174,14 +177,14 @@ void Engine::DisplaySections() {
     cv::rectangle(frame, frame_dims_[DOWN], Scalar(0, 0, 0));
     cv::rectangle(frame, frame_dims_[LEFT], Scalar(0, 0, 0));
     imshow("Neutral Zone", frame);
-    if (waitKey(30) == 'q') {
+    if (cv::waitKey(30) == 'q') {
       StopOpenCV();
       break;
     }
   }
 }
 
-void Engine::StopOpenCV() { destroyAllWindows(); }
+void Engine::StopOpenCV() { cv::destroyAllWindows(); }
 
 bool Engine::CheckNeutralStartingPoints() {
   return neutral_zone_.x >= 0 && neutral_zone_.y >= 0;
