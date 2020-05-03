@@ -44,6 +44,6 @@ Once you choose your color and calibrate, you can click `Actions` -> `Run` and t
 
 ## Notes
 
-- This might wor on Visual Studio 2015, but it has not been tested.
+- This might work on Visual Studio 2015, but it has not been tested.
 - This might work with previous versions of OpenCV, but it has not been tested.
 - This might work with previous Versions of Windows 64 bit, but it has not been tested.

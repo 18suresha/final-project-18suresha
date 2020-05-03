@@ -3,7 +3,15 @@
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![docs](https://img.shields.io/badge/docs-yes-brightgreen)](docs/README.md)
 
-Read [this document](https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html) to understand the project
-layout.
+# Flick of the Wrist
 
-**Author**: Anonymous - [`example@illinois.edu`](mailto:example@illinois.edu)
+### Author: Adarsh Suresh - [`adarshs3@illinois.edu`](mailto:adarshs3@illinois.edu)
+
+The project I want to do is a C++ application that allows the user to scroll through a site or switch tabs using the motion of their finger. The computer's camera would capture the movement of the user's finger and scroll/switch accordingly. This project would use Computer Vision which is something I have experience in since my CS 125 final project used an Optical Character Recognition API to process images of text as actual text. However, with my 125 project, the main challenge was the integration of the API into the Android developing environment. When it came to the core logic, the API did most of the work. With this 126 project, I will utilize different Computer Vision tools to process videos of the user. Instead of having those tools do all the work, I will figure out how I can use the data extracted from those tools to analyze the video capture input and scroll/switch accordingly.
+
+This project will have two main components and possibly a third. The first component will be figuring out how to process the video capture and identify the motion of the user's finger. I plan to use [OpenCV](https://opencv.org/). After messing around a little with FAST feature detection in OpenCV 3.4.8 in Python, feature detection looks like one way to identify the motion of a finger by using it on different frames of a video. Cinder-OpenCV uses OpenCV 2.4.9 which should have access to SURF feature detection which seems to be the preferred method among OpenCV users. The second component will be manipulating the window through scrolling/switching tabs. I presume that this can be done through keyboard input or mouse scrolling input using C++ by utilizing [SendInput()](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput?redirectedfrom=MSDN). The possible third component is a GUI that allows the user to choose what color the application should identify as the color of the marker on their finger to track their finger's motion, and to input the dimensions of the neutral zone which is where the user can place their finger so no action occurs. [Cinder-ImGui](https://github.com/simongeilfus/Cinder-ImGui) seems like viable options for implementing the GUI.
+
+In terms of the timeline, by the end of Week 1, I will have set up my developing environment with all my required libraries, decided on what tools (SURF, FAST, etc.) and what algorithm I will use to identify motion of the user's finger. I will also have implemented this algorithm in C++ or Python. The reason for using Python is to develop code quickly to create a proof of concept which I can then implement in C++. By the end of week 2, I will have implemented sending keyboard input through C++ and will have gotten the C++ keyboard input code to run accordingly with the results of the video capture analysis from the OpenCV component. By week 3, I will have gotten the GUI to work, so the user can specify their color choice. If I were to complete this project early, I could implement a sensitivity feature as in the speed of the motion of the user's fingers determines how much the window is scrolled or if the user wants to switch tabs or a whole window.
+
+---
+
