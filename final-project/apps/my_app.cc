@@ -38,6 +38,8 @@ void MyApp::update() {
   ImGui::RadioButton("Blue", &color_, mylibrary::ColorToUse_::ColorToUse_Blue);
   ImGui::SameLine();
   ImGui::RadioButton("Red", &color_, mylibrary::ColorToUse_::ColorToUse_Red);
+  ImGui::SameLine();
+  ImGui::RadioButton("Pink", &color_, mylibrary::ColorToUse_::ColorToUse_Pink);
 
   ImGui::InputInt("Starting X Position of Neutral Zone", &neutral_zone_.x);
   ImGui::InputInt("Starting Y Position of Neutral Zone", &neutral_zone_.y);

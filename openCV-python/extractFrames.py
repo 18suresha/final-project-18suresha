@@ -44,8 +44,12 @@ def FrameCapture(path):
             lower_red = np.array([0, 120, 120])
             upper_red = np.array([5, 255, 255])
 
+            # define range of pink color in HSV
+            lower_pink = np.array([170, 120, 120])
+            upper_pink = np.array([180, 255, 255])
+
             # Threshold the HSV image to get only blue colors
-            mask = cv2.inRange(hsv, lower_red, upper_red)
+            mask = cv2.inRange(hsv, lower_pink, upper_pink)
             cv2.imshow("filtered", mask)
             cv2.imshow("cropped", cropped_img)
             # Saves the frames with frame-count

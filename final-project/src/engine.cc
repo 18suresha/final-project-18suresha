@@ -10,8 +10,8 @@
 #include "mylibrary/engine.h"
 
 using cv::Mat;
-using cv::Scalar;
 using cv::Rect;
+using cv::Scalar;
 using cv::Size;
 using std::thread;
 
@@ -26,8 +26,10 @@ Engine::Engine()
                                                               {LEFT, 0}},
       section_pixels_{{UP, 0}, {RIGHT, 0}, {DOWN, 0}, {LEFT, 0}},
       color_ranges_{ColorRange{Scalar(105, 150, 80), Scalar(118, 255, 225)},
-                    ColorRange{Scalar(0, 150, 150), Scalar(4, 255, 225)}},
-      num_threshold_samples_{150}, threshold_offset_{100} {
+                    ColorRange{Scalar(0, 120, 120), Scalar(5, 255, 225)},
+                    ColorRange{Scalar(170, 120, 120), Scalar(180, 255, 255)}},
+      num_threshold_samples_{150}, threshold_offset_{100}, display_exit_key_{
+                                                               'q'} {
   neutral_zone_ =
       Rect{cam_frame_size_.width / 3, 5 * cam_frame_size_.height / 12,
            7 * cam_frame_size_.width / 24, cam_frame_size_.height / 4};
@@ -177,7 +179,7 @@ void Engine::DisplaySections() {
     cv::rectangle(frame, frame_dims_[DOWN], Scalar(0, 0, 0));
     cv::rectangle(frame, frame_dims_[LEFT], Scalar(0, 0, 0));
     imshow("Neutral Zone", frame);
-    if (cv::waitKey(30) == 'q') {
+    if (cv::waitKey(30) == display_exit_key_) {
       StopOpenCV();
       break;
     }

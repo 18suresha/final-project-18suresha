@@ -88,12 +88,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\asure\Cinder\include;C:\Users\asure\Cinder\my-projects\final-project-18suresha\final-project\apps;C:\Users\asure\Cinder\my-projects\final-project-18suresha\final-project\include;C:\Users\asure\Downloads\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\include;..\final-project\apps;..\final-project\include;C:\Users\asure\Downloads\opencv\build\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\Users\asure\Cinder\lib\msw\$(PlatformTarget);C:\Users\asure\Cinder\lib\msw\$(PlatformTarget)\$(Configuration)\$(PlatformToolset);C:\Users\asure\Downloads\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\lib\msw\$(PlatformTarget);..\..\..\lib\msw\$(PlatformTarget)\$(Configuration)\$(PlatformToolset);C:\Users\asure\Downloads\opencv\build\x64\vc15\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>cinder.lib;OpenGL32.lib;opencv_world420d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

@@ -12,7 +12,11 @@ namespace mylibrary {
 
 typedef int ColorToUse;
 
-enum ColorToUse_ { ColorToUse_Blue = 0, ColorToUse_Red = 1 };
+enum ColorToUse_ {
+  ColorToUse_Blue = 0,
+  ColorToUse_Red = 1,
+  ColorToUse_Pink = 2
+};
 
 struct ColorRange {
   cv::Scalar lower;
@@ -51,6 +55,7 @@ private:
   bool analyze_video_;
   int num_threshold_samples_;
   int threshold_offset_;
+  char display_exit_key_;
   ColorToUse color_to_use_;
   cv::VideoCapture cap_;
   Keyboard keyboard_;
