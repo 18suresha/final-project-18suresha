@@ -71,4 +71,11 @@
   - Check Map documentation for multithreading specifications
   - Count number of colors
   - Preview neutral zone with four sections
+
+- **5/1/20** Formatted code to follow Google Style Guide, User can calibrate application any time they want to, Display different sections in preview, Replaced orange with red
+  - Create documentaion on how to set up project in Visual Studio
+  - Mention specifications of netural zone preferably being user's head and using well-sized markers on finger in documentation
+  - Add third color option
+  - Write tests
+  - Check Map documentation for multithreading specifications
 ---
