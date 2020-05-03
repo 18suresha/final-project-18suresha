@@ -16,14 +16,11 @@ using std::thread;
 namespace mylibrary {
 
     Engine::Engine() : analyze_video_{ false }, color_{ ColorToUse_Blue }, cap_{ 0 }, keyboard_{}, prev_time_point_{ std::chrono::system_clock::now() }, cam_frame_size_{ SetCamFrameSize() }, section_thresholds_{ {UP, 0}, {RIGHT, 0}, {DOWN, 0}, {LEFT, 0} },section_pixels_{ {UP, 0}, {RIGHT, 0}, {DOWN, 0}, {LEFT, 0} } {
-        neutral_zone_.x = cam_frame_size_.width / 3;
-        neutral_zone_.frame_size.width = 7 * cam_frame_size_.width / 24;
-        neutral_zone_.y = 5 * cam_frame_size_.height / 12;
-        neutral_zone_.frame_size.height = cam_frame_size_.height / 4;
-        frame_dims_[UP] = Section{ neutral_zone_.x, 0, Size{neutral_zone_.frame_size.width, neutral_zone_.y} };
-        frame_dims_[RIGHT] = Section{ 0, neutral_zone_.y, Size{neutral_zone_.x, neutral_zone_.frame_size.height } };
-        frame_dims_[DOWN] = Section{ neutral_zone_.x, neutral_zone_.y + neutral_zone_.frame_size.height, Size{neutral_zone_.frame_size.width, (cam_frame_size_.height) - ((neutral_zone_.y + neutral_zone_.frame_size.height)) } };
-        frame_dims_[LEFT] = Section{ neutral_zone_.x + neutral_zone_.frame_size.width, neutral_zone_.y, Size{(cam_frame_size_.width) - ((neutral_zone_.x + neutral_zone_.frame_size.width)), neutral_zone_.frame_size.height } };
+        neutral_zone_ = Rect{ cam_frame_size_.width / 3 , 5 * cam_frame_size_.height / 12 , 7 * cam_frame_size_.width / 24,  cam_frame_size_.height / 4 };
+        frame_dims_[UP] = Rect{ neutral_zone_.x, 0, neutral_zone_.width, neutral_zone_.y};
+        frame_dims_[RIGHT] = Rect{ 0, neutral_zone_.y, neutral_zone_.x, neutral_zone_.height};
+        frame_dims_[DOWN] = Rect{ neutral_zone_.x, neutral_zone_.y + neutral_zone_.height, neutral_zone_.width, (cam_frame_size_.height) - ((neutral_zone_.y + neutral_zone_.height))};
+        frame_dims_[LEFT] = Rect{ neutral_zone_.x + neutral_zone_.width, neutral_zone_.y, (cam_frame_size_.width) - ((neutral_zone_.x + neutral_zone_.width)), neutral_zone_.height};
         directions_ = { UP, RIGHT, DOWN, LEFT };
         SetThresholds();
     }
@@ -69,7 +66,7 @@ namespace mylibrary {
         return cam_frame_size_;
     }
 
-    Section Engine::GetNeutralZone() {
+    Rect Engine::GetNeutralZone() {
         return neutral_zone_;
     }
 
@@ -80,7 +77,7 @@ namespace mylibrary {
             inRange(hsv_frame, Scalar(105, 150, 80), Scalar(118, 255, 225), filter_frame);
         }
         else if (color_ == ColorToUse_Orange) {
-            inRange(hsv_frame, Scalar(4, 130, 120), Scalar(10, 255, 225), filter_frame);
+            inRange(hsv_frame, Scalar(0, 150, 100), Scalar(4, 255, 225), filter_frame);
         }
         return filter_frame;
     }
@@ -98,9 +95,7 @@ namespace mylibrary {
     }
 
     void Engine::AnalyzeSection(Direction dir, const Mat& src_frame) {
-        Section sec = frame_dims_[dir];
-        Rect roi(sec.x, sec.y, sec.frame_size.width, sec.frame_size.height);
-        Mat cropped_frame = src_frame(roi);
+        Mat cropped_frame = src_frame(frame_dims_[dir]);
         Ptr<FeatureDetector> detector = ORB::create();  
         FAST(cropped_frame, section_keypoints_[dir], 0, false);
         // take feature_frame out?
@@ -109,9 +104,7 @@ namespace mylibrary {
     }
 
     void Engine::AnalyzeSectionPixels(Direction dir, const Mat& src_frame) {
-        Section sec = frame_dims_[dir];
-        Rect roi(sec.x, sec.y, sec.frame_size.width, sec.frame_size.height);
-        Mat cropped_frame = src_frame(roi);
+        Mat cropped_frame = src_frame(frame_dims_[dir]);
         section_pixels_[dir] = cv::countNonZero(cropped_frame);
     }
 
@@ -166,7 +159,7 @@ namespace mylibrary {
                 AnalyzeFingerMovement();
             }
             if (std::chrono::duration<double>(std::chrono::system_clock::now() -
-                prev_time_point_).count() > 1) {
+                prev_time_point_).count() > 0.5) {
                 analyze_video_ = true;
             }
             /*if (waitKey(30) == 'q') {
@@ -182,10 +175,12 @@ namespace mylibrary {
         while (1) {
             Mat frame;
             cap_ >> frame;
-            cv::Size frame_size = frame.size();
-            cv::Rect roi(neutral_zone_.x, neutral_zone_.y, neutral_zone_.frame_size.width, neutral_zone_.frame_size.height);
-            Mat cropped_frame = frame(roi);
-            imshow("Neutral Zone", cropped_frame);
+            cv::rectangle(frame, neutral_zone_, Scalar(0, 0, 0));
+            cv::rectangle(frame, frame_dims_[UP], Scalar(0, 0, 0));
+            cv::rectangle(frame, frame_dims_[RIGHT], Scalar(0, 0, 0));
+            cv::rectangle(frame, frame_dims_[DOWN], Scalar(0, 0, 0));
+            cv::rectangle(frame, frame_dims_[LEFT], Scalar(0, 0, 0));
+            imshow("Neutral Zone", frame);
             if (waitKey(30) == 'q') {
                 StopOpenCV();
                 break;
@@ -203,18 +198,18 @@ namespace mylibrary {
     }
 
     bool Engine::CheckNeutralWidth() {
-        return (neutral_zone_.frame_size.width > 0) && (neutral_zone_.x + neutral_zone_.frame_size.width <= cam_frame_size_.width);
+        return (neutral_zone_.width > 0) && (neutral_zone_.x + neutral_zone_.width <= cam_frame_size_.width);
     }
 
     bool Engine::CheckNeutralHeight() {
-        return (neutral_zone_.frame_size.height > 0) && (neutral_zone_.y + neutral_zone_.frame_size.height <= cam_frame_size_.height);
+        return (neutral_zone_.height > 0) && (neutral_zone_.y + neutral_zone_.height <= cam_frame_size_.height);
     }
 
     bool Engine::IsNeutralZoneValid() {
         return CheckNeutralStartingPoints() && CheckNeutralWidth() && CheckNeutralHeight();
     }
 
-    void Engine::SetNeutralZone(Section neutral_zone) {
+    void Engine::SetNeutralZone(Rect neutral_zone) {
         neutral_zone_ = neutral_zone;
     }
 

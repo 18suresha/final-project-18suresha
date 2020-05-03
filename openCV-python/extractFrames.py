@@ -27,21 +27,25 @@ def FrameCapture(path):
             # left
             cropped_left = frame[280:376, 426:533]
 
-            cropped_img = cropped_up
+            cropped_img = cropped_down
 
             # Convert BGR to HSV
             hsv = cv2.cvtColor(cropped_img, cv2.COLOR_BGR2HSV)
 
             # define range of orange color in HSV
-            lower_orange = np.array([4,130,120])
+            lower_orange = np.array([1,130,100])
             upper_orange = np.array([10,255,225])
 
             # define range of blue color in HSV
             lower_blue = np.array([105, 150, 80])
             upper_blue = np.array([118, 255, 255])
 
+            # define range of red color in HSV
+            lower_red = np.array([0, 150, 100])
+            upper_red = np.array([4, 255, 255])
+
             # Threshold the HSV image to get only blue colors
-            mask = cv2.inRange(hsv, lower_orange, upper_orange)
+            mask = cv2.inRange(hsv, lower_red, upper_red)
             cv2.imshow("filtered", mask)
             cv2.imshow("cropped", cropped_img)
             # Saves the frames with frame-count

@@ -19,8 +19,6 @@ namespace myapp {
         void draw() override;
         void keyDown(cinder::app::KeyEvent) override;
 
-        cinder::gl::Texture2dRef mTex;
-
     private:
         int neutral_x_;
         int neutral_y_;
@@ -28,7 +26,7 @@ namespace myapp {
         int neutral_height_;
         bool run_opencv_;
         mylibrary::ColorToUse color_;
-        mylibrary::Section neutral_zone_;
+        cv::Rect neutral_zone_;
         std::string cam_width_text_;
         std::string cam_height_text_;
         mylibrary::Engine engine_;

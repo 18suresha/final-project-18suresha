@@ -38,8 +38,8 @@ namespace myapp {
 
 		ImGui::InputInt("Starting X Position of Neutral Zone", &neutral_zone_.x);
 		ImGui::InputInt("Starting Y Position of Neutral Zone", &neutral_zone_.y);
-		ImGui::InputInt("Width of Neutral Zone", &neutral_zone_.frame_size.width);
-		ImGui::InputInt("Height of Neutral Zone", &neutral_zone_.frame_size.height);
+		ImGui::InputInt("Width of Neutral Zone", &neutral_zone_.width);
+		ImGui::InputInt("Height of Neutral Zone", &neutral_zone_.height);
 
 		ImGui::Text(cam_width_text_.c_str());
 		ImGui::Text(cam_height_text_.c_str());

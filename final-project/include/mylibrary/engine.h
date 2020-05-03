@@ -25,12 +25,6 @@ enum Direction {
 	LEFT
 };
 
-struct Section {
-	int x;
-	int y;
-	cv::Size frame_size;
-};
-
 class Engine {
 	public:
 		Engine();
@@ -38,8 +32,8 @@ class Engine {
 		void DisplayNeutralZone();
 		bool IsNeutralZoneValid();
 		cv::Size GetCamFrameSize();
-		void SetNeutralZone(Section neutral_zone);
-		Section GetNeutralZone();
+		void SetNeutralZone(cv::Rect neutral_zone);
+		cv::Rect GetNeutralZone();
 		void SetColorToUse(ColorToUse color);
 
 	private:
@@ -63,9 +57,9 @@ class Engine {
 		Keyboard keyboard_;
 		const cv::Size cam_frame_size_;
 		std::chrono::time_point<std::chrono::system_clock> prev_time_point_;
-		Section neutral_zone_;	
+		cv::Rect neutral_zone_;	
 		std::initializer_list<Direction> directions_;
-		std::map<Direction, Section> frame_dims_;
+		std::map<Direction, cv::Rect> frame_dims_;
 		std::map<Direction, double> section_thresholds_;
 		std::map<Direction, std::vector<cv::KeyPoint>> section_keypoints_;
 		std::map<Direction, int> section_pixels_;
