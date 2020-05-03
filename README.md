@@ -1,11 +1,9 @@
-# Final Project
+# Flick of the Wrist
 
 [![license](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![docs](https://img.shields.io/badge/docs-yes-brightgreen)](docs/README.md)
 
-# Flick of the Wrist
-
-### Author: Adarsh Suresh - [`adarshs3@illinois.edu`](mailto:adarshs3@illinois.edu)
+### Author: Adarsh Suresh
 
 The project I want to do is a C++ application that allows the user to scroll through a site or switch tabs using the motion of their finger. The computer's camera would capture the movement of the user's finger and scroll/switch accordingly. This project would use Computer Vision which is something I have experience in since my CS 125 final project used an Optical Character Recognition API to process images of text as actual text. However, with my 125 project, the main challenge was the integration of the API into the Android developing environment. When it came to the core logic, the API did most of the work. With this 126 project, I will utilize different Computer Vision tools to process videos of the user. Instead of having those tools do all the work, I will figure out how I can use the data extracted from those tools to analyze the video capture input and scroll/switch accordingly.
 
