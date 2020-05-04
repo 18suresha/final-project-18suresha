@@ -9,13 +9,17 @@ namespace mylibrary {
 class Keyboard {
 public:
   Keyboard();
+  // Switches to the right tab in the current window.
   void SwitchTabsRight();
+  // Switches to the left tab in the current window.
   void SwitchTabsLeft();
+  // Scrolls up in the current window.
   void ScrollUp();
+  // Scrolls down in the current window.
   void ScrollDown();
 
 private:
-  size_t scroll_amount_;
+  const size_t scroll_amount_;
   INPUT ip_;
   INPUT ip1_;
   INPUT ip2_;

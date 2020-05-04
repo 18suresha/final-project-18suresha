@@ -78,4 +78,7 @@
   - Add third color option
   - Write tests
   - Check Map documentation for multithreading specifications
+
+- **5/3/20** Created documentation, Added pink color, wrote tests
+  - Check Map documentation for multithreading specifications
 ---

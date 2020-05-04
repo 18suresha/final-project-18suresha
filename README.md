@@ -5,11 +5,53 @@
 
 ### Author: Adarsh Suresh
 
-The project I want to do is a C++ application that allows the user to scroll through a site or switch tabs using the motion of their finger. The computer's camera would capture the movement of the user's finger and scroll/switch accordingly. This project would use Computer Vision which is something I have experience in since my CS 125 final project used an Optical Character Recognition API to process images of text as actual text. However, with my 125 project, the main challenge was the integration of the API into the Android developing environment. When it came to the core logic, the API did most of the work. With this 126 project, I will utilize different Computer Vision tools to process videos of the user. Instead of having those tools do all the work, I will figure out how I can use the data extracted from those tools to analyze the video capture input and scroll/switch accordingly.
+## Dependencies
 
-This project will have two main components and possibly a third. The first component will be figuring out how to process the video capture and identify the motion of the user's finger. I plan to use [OpenCV](https://opencv.org/). After messing around a little with FAST feature detection in OpenCV 3.4.8 in Python, feature detection looks like one way to identify the motion of a finger by using it on different frames of a video. Cinder-OpenCV uses OpenCV 2.4.9 which should have access to SURF feature detection which seems to be the preferred method among OpenCV users. The second component will be manipulating the window through scrolling/switching tabs. I presume that this can be done through keyboard input or mouse scrolling input using C++ by utilizing [SendInput()](https://docs.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-sendinput?redirectedfrom=MSDN). The possible third component is a GUI that allows the user to choose what color the application should identify as the color of the marker on their finger to track their finger's motion, and to input the dimensions of the neutral zone which is where the user can place their finger so no action occurs. [Cinder-ImGui](https://github.com/simongeilfus/Cinder-ImGui) seems like viable options for implementing the GUI.
+- [Visual Studio 2019](https://visualstudio.microsoft.com/downloads/)
+- [OpenCV 4.2.0](https://github.com/opencv/opencv/releases/tag/4.2.0)
+- [Cinder 0.9.3dev](https://github.com/cinder/Cinder/tree/master)
+- Microsoft Windows 10 64 bit
 
-In terms of the timeline, by the end of Week 1, I will have set up my developing environment with all my required libraries, decided on what tools (SURF, FAST, etc.) and what algorithm I will use to identify motion of the user's finger. I will also have implemented this algorithm in C++ or Python. The reason for using Python is to develop code quickly to create a proof of concept which I can then implement in C++. By the end of week 2, I will have implemented sending keyboard input through C++ and will have gotten the C++ keyboard input code to run accordingly with the results of the video capture analysis from the OpenCV component. By week 3, I will have gotten the GUI to work, so the user can specify their color choice. If I were to complete this project early, I could implement a sensitivity feature as in the speed of the motion of the user's fingers determines how much the window is scrolled or if the user wants to switch tabs or a whole window.
+## Getting Started
+### Visual Studio
+Download Visual Studio 2019 and make sure to check Desktop development with C++.
+### Cinder
+Clone the Cinder repository from their master branch. Go to `\proj\vc2019` in your cloned repository and open `cinder.sln`. This should open Cinder in Visual Studio. Open `Filesystem.h` within `Header Files` in the Solution Explorer. Change `#include <filesystem>` to `#include <experimental/filesystem>` and `std::filesystem` to `std::experimental::filesystem`. Write `#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING` above `#include <experimental/filesystem>`. In Visual Studio, click on `cinder` in the Solution Explorer and click `Alt + Enter` to open up the properties of the solution. Go to `Configuration Properties` -> `C/C++` -> `All Options` and scroll to `Runtime Library`. Change the value of `Runtime Library` to `Multi-threaded Debug DLL (/MDd)`. Next, click on `Solution 'cinder'` in the Solution Explorer and click `Alt + Enter` and go to `Configuration Properties` -> `Configuration`. The configuration should be `Debug`, platform should be `x64`, and `Build` should be checked. Next, you can build Cinder by clicking on the green play button at the top of Visual Studio. Finally, within your Cinder root directory, create a `my-projects` directory.
+### OpenCV 4.2.0
+Go to the OpenCV 4.2.0 Release on GitHub. Download the `opencv-4.2.0-vc14_vc15.exe` file and extract it.
+### Flick of the Wrist
+Clone this repository into your `my-projects` directory. Open the `.sln` file which will open Visual Studio. Click on `final-project` in the Solution Explorer and click `Alt + Enter`. Go to `Configuration Properties` -> `C/C++` -> `General` -> `Additional Include Directories` -> `Edit` and change the path of the OpenCV `include` directory to the corresponding path on your system. Next, go to `Configuration Properties` -> `Linker` -> `General` -> `Additional Library Directories` -> `Edit` and change the path of the OpenCV `lib` directory to the corresponding path on your system. Build the project and you should get an error about a missing `opencv_world420d.dll` file. Go to `opencv\build\x64\vc15\bin` to find `opencv_world420d.dll` and copy that file into the `final-project-18suresha\x64\Debug` directory. Now, you should be able to build successfully.
+## How to Use
+Make sure that no other application is using your primary camera. Once you run the project and the GUI opens, click on `Actions` -> `Display Sections`. This will open a window showing you the video from the front facing camera split into sections by black lines. The middle section is called the neutral zone. While your finger is in this section, no keyboard or mouse action will be performed. The neutral zone should preferably surround your head. Press `q` to exit the window.
+### Movements and Actions
+There are four sections with respect to the neutral zone. The section right above, right below it, directly to the right, and directly to the left of the neutral zone. Finger movement will be tracked only in these four sections. These sections can be viewed by clicking on `Display Sections`.
+
+| Finger Movement       | Window Action                                               |
+|-----------------------|-------------------------------------------------------------|
+| Up                    | Scroll Up                                                   |
+| Down                  | Scroll Down                                                 |
+| Right                 | Switch Tabs Right                                           |
+| Left                  | Switch Tabs Left                                            |
+
+### Physical Dependencies
+Something that can cover a good amount of your finger and is either fully blue, red, or pink. Like the examples below.
+![](assets/blue.jpg)
+
+![](assets/red.jpg)
+
+![](assets/pink.jpg)
+
+Place something like this on your finger.
+### Calibration
+If you change colors or the dimensions of your neutral zone, make sure to place your finger in the neutral zone and click `Actions` -> `Calibrate`. This might take a few seconds.
+### Running Flick of the Wrist
+Once you choose your color and calibrate, you can click `Actions` -> `Run` and then switch to another winder such as Google Chrome to start using the application by moving your finger.
+
+## Notes
+
+- This might work on Visual Studio 2015, but it has not been tested.
+- This might work with previous versions of OpenCV, but it has not been tested.
+- This might work with previous Versions of Windows 64 bit, but it has not been tested.
 
 ---
 

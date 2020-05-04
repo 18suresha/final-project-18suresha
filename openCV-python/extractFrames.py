@@ -27,7 +27,7 @@ def FrameCapture(path):
             # left
             cropped_left = frame[186:306, 213:640]
 
-            cropped_img = cropped_right
+            cropped_img = cropped_up
 
             # Convert BGR to HSV
             hsv = cv2.cvtColor(cropped_img, cv2.COLOR_BGR2HSV)

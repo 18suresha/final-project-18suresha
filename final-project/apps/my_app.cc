@@ -14,7 +14,7 @@ using cinder::app::KeyEvent;
 
 MyApp::MyApp()
     : engine_{},
-    run_opencv_{false}, color_{mylibrary::ColorToUse_::ColorToUse_Blue} {
+      run_opencv_{false}, color_{mylibrary::ColorToUse_::ColorToUse_Blue} {
   cam_width_text_ =
       "Camera Width: " + std::to_string(engine_.GetCamFrameSize().width);
   cam_height_text_ =
@@ -53,11 +53,11 @@ void MyApp::update() {
   engine_.SetNeutralZone(neutral_zone_);
 
   if (run_opencv_ && engine_.IsNeutralZoneValid()) {
-    engine_.RunOpenCV();
+    engine_.StartFingerTracking();
   } else if (display_sections && engine_.IsNeutralZoneValid()) {
     engine_.DisplaySections();
   } else if (calibrate) {
-      engine_.Calibrate();
+    engine_.Calibrate();
   }
 }
 
