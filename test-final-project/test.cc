@@ -3,15 +3,14 @@
 #define CATCH_CONFIG_MAIN
 
 #include "catch.hpp"
-#include <cinder/Rand.h>
-#include <iostream>
-#include <filesystem>
+#include "opencv2/opencv.hpp"
+#include "mylibrary/engine.h"
 
-#include "mylibrary/example.h"
+using mylibrary::Engine;
 
 
-TEST_CASE("Random sanity test", "[random]") {
-    const float random = cinder::randFloat();
-    REQUIRE(0. <= random);
-    REQUIRE(random <= 1.);
+TEST_CASE("Get Camera Size") {
+    Engine engine{};
+    cv::Size cam_size = engine.GetCamFrameSize();
+    REQUIRE(cam_size == cv::Size{ 640, 480 });
 }

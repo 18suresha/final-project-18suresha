@@ -40,6 +40,10 @@ void Engine::SetThresholds() {
   if (!cap_.isOpened()) {
     return;
   }
+  section_thresholds_[UP] = 0;
+  section_thresholds_[RIGHT] = 0;
+  section_thresholds_[DOWN] = 0;
+  section_thresholds_[LEFT] = 0;
   for (int i = 0; i < num_threshold_samples_; i++) {
     Mat frame;
     cap_ >> frame;
