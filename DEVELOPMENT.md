@@ -84,5 +84,6 @@
 
 - **5/4/20** Updated naming
 
-- **5/5/20** Updated naming
+- **5/5/20** Updated blue image
+  - Create video of project in use
 ---
