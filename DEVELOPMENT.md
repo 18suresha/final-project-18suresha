@@ -81,4 +81,8 @@
 
 - **5/3/20** Created documentation, Added pink color, wrote tests
   - Check Map documentation for multithreading specifications
+
+- **5/4/20** Updated naming
+
+- **5/5/20** Updated naming
 ---
