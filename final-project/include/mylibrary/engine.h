@@ -6,7 +6,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 
-#include "mylibrary/keyboard.h"
+#include "mylibrary/input_device.h"
 
 namespace mylibrary {
 
@@ -68,7 +68,7 @@ private:
   char display_exit_key_;
   ColorToUse color_to_use_;
   cv::VideoCapture cap_;
-  Keyboard keyboard_;
+  InputDevice input_device_;
   const cv::Size cam_frame_size_;
   std::chrono::time_point<std::chrono::system_clock> prev_time_point_;
   cv::Rect neutral_zone_;

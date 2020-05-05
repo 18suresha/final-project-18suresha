@@ -2,11 +2,11 @@
 
 #include <windows.h>
 
-#include "mylibrary/keyboard.h"
+#include "mylibrary/input_device.h"
 
 namespace mylibrary {
 
-Keyboard::Keyboard() : scroll_amount_{300} {
+InputDevice::InputDevice() : scroll_amount_{300} {
   ip_.type = INPUT_KEYBOARD;
   ip_.ki.wScan = 0;
   ip_.ki.time = 0;
@@ -26,7 +26,7 @@ Keyboard::Keyboard() : scroll_amount_{300} {
   ip_.mi.time = 0;
 }
 
-void Keyboard::SwitchTabsRight() {
+void InputDevice::SwitchTabsRight() {
   ip_.type = INPUT_KEYBOARD;
   ip_.ki.wVk = VK_CONTROL;
   ip_.ki.dwFlags = 0;
@@ -44,7 +44,7 @@ void Keyboard::SwitchTabsRight() {
   SendInput(1, &ip1_, sizeof(INPUT));
 }
 
-void Keyboard::SwitchTabsLeft() {
+void InputDevice::SwitchTabsLeft() {
   ip_.type = INPUT_KEYBOARD;
   ip_.ki.wVk = VK_CONTROL;
   ip_.ki.dwFlags = 0;
@@ -68,13 +68,13 @@ void Keyboard::SwitchTabsLeft() {
   SendInput(1, &ip2_, sizeof(INPUT));
 }
 
-void Keyboard::ScrollUp() {
+void InputDevice::ScrollUp() {
   ip_.type = INPUT_MOUSE;
   ip_.mi.mouseData = 1 * scroll_amount_;
   SendInput(1, &ip_, sizeof(ip_));
 }
 
-void Keyboard::ScrollDown() {
+void InputDevice::ScrollDown() {
   ip_.type = INPUT_MOUSE;
   ip_.mi.mouseData = -1 * scroll_amount_;
   SendInput(1, &ip_, sizeof(ip_));

@@ -24,7 +24,7 @@
     <ClCompile Include="src\engine.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\keyboard.cc">
+    <ClCompile Include="src\input_device.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,7 +35,7 @@
     <ClInclude Include="include\mylibrary\engine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\mylibrary\keyboard.h">
+    <ClInclude Include="include\mylibrary\input_device.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

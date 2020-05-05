@@ -6,9 +6,9 @@
 
 namespace mylibrary {
 
-class Keyboard {
+class InputDevice {
 public:
-  Keyboard();
+  InputDevice();
   // Switches to the right tab in the current window.
   void SwitchTabsRight();
   // Switches to the left tab in the current window.

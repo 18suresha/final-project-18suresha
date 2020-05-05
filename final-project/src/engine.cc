@@ -19,9 +19,10 @@ namespace mylibrary {
 
 Engine::Engine()
     : analyze_video_{false}, color_to_use_{ColorToUse_Blue}, cap_{0},
-      keyboard_{}, prev_time_point_{std::chrono::system_clock::now()},
-    cam_frame_size_{ SetCamFrameSize() }, section_thresholds_{ 0, 0, 0, 0 }, section_dims_{ Rect{}, Rect{}, Rect{}, Rect{} },
-      section_pixels_{0, 0, 0, 0},
+      input_device_{}, prev_time_point_{std::chrono::system_clock::now()},
+      cam_frame_size_{SetCamFrameSize()}, section_thresholds_{0, 0, 0, 0},
+      section_dims_{Rect{}, Rect{}, Rect{}, Rect{}}, section_pixels_{0, 0, 0,
+                                                                     0},
       color_ranges_{ColorRange{Scalar(105, 150, 80), Scalar(118, 255, 225)},
                     ColorRange{Scalar(0, 120, 120), Scalar(5, 255, 225)},
                     ColorRange{Scalar(170, 120, 120), Scalar(180, 255, 255)}},
@@ -150,19 +151,19 @@ void Engine::SetColorToUse(ColorToUse color) { color_to_use_ = color; }
 void Engine::AnalyzeFingerMovement() {
   if (section_pixels_[UP] >
       threshold_offset_ + ((int)section_thresholds_[UP])) {
-    keyboard_.ScrollUp();
+    input_device_.ScrollUp();
     OnKeyboardInput();
   } else if (section_pixels_[RIGHT] >
              threshold_offset_ + ((int)section_thresholds_[RIGHT])) {
-    keyboard_.SwitchTabsRight();
+    input_device_.SwitchTabsRight();
     OnKeyboardInput();
   } else if (section_pixels_[LEFT] >
              threshold_offset_ + ((int)section_thresholds_[LEFT])) {
-    keyboard_.SwitchTabsLeft();
+    input_device_.SwitchTabsLeft();
     OnKeyboardInput();
   } else if (section_pixels_[DOWN] >
              threshold_offset_ + ((int)section_thresholds_[DOWN])) {
-    keyboard_.ScrollDown();
+    input_device_.ScrollDown();
     OnKeyboardInput();
   }
 }
