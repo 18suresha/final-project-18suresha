@@ -1,7 +1,6 @@
 // Copyright (c) 2020 Adarsh Suresh. All rights reserved.
 
 #include <chrono>
-#include <cinder/app/App.h>
 #include <opencv2/features2d.hpp>
 #include <opencv2/opencv.hpp>
 #include <thread>
@@ -191,6 +190,7 @@ void Engine::DisplaySections() {
   while (1) {
     Mat frame;
     cap_ >> frame;
+    // draw black rectangles around different sections
     cv::rectangle(frame, neutral_zone_, Scalar(0, 0, 0));
     cv::rectangle(frame, section_dims_[UP], Scalar(0, 0, 0));
     cv::rectangle(frame, section_dims_[RIGHT], Scalar(0, 0, 0));

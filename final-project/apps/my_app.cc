@@ -2,10 +2,7 @@
 
 #include "my_app.h"
 
-#include "cinder/gl/gl.h"
 #include <cinder/CinderImGui.h>
-#include <cinder/ImageIo.h>
-#include <cinder/Surface.h>
 #include <cinder/app/App.h>
 
 namespace myapp {
@@ -56,7 +53,7 @@ void MyApp::update() {
     engine_.StartFingerTracking();
   } else if (display_sections && engine_.IsNeutralZoneValid()) {
     engine_.DisplaySections();
-  } else if (calibrate) {
+  } else if (calibrate && engine_.IsNeutralZoneValid()) {
     engine_.Calibrate();
   }
 }

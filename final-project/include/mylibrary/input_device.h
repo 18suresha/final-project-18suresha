@@ -1,6 +1,6 @@
 // Copyright (c) 2020 Adarsh Suresh. All rights reserved.
-#ifndef FINALPROJECT_MYLIBRARY_KEYBOARD_H_
-#define FINALPROJECT_MYLIBRARY_KEYBOARD_H_
+#ifndef FINALPROJECT_MYLIBRARY_INPUTDEVICE_H_
+#define FINALPROJECT_MYLIBRARY_INPUTDEVICE_H_
 
 #include <windows.h>
 

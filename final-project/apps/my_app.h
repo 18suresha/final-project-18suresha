@@ -3,8 +3,6 @@
 #ifndef FINALPROJECT_APPS_MYAPP_H_
 #define FINALPROJECT_APPS_MYAPP_H_
 
-#include "cinder/gl/gl.h"
-#include <cinder/CinderImGui.h>
 #include <cinder/app/App.h>
 
 #include "mylibrary/engine.h"
