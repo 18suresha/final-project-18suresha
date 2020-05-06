@@ -86,4 +86,7 @@
 
 - **5/5/20** Updated blue image
   - Create video of project in use
+
+- **5/6/20** Fixed logic so user can't calibrate with an invalid neutral zone
+  - Create video of project in use
 ---

@@ -27,4 +27,4 @@ private:
 
 } // namespace mylibrary
 
-#endif // FINALPROJECT_MYLIBRARY_KEYBOARD_H_
+#endif // FINALPROJECT_MYLIBRARY_INPUTDEVICE_H_
