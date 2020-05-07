@@ -66,6 +66,7 @@ private:
   int num_threshold_samples_;
   int threshold_offset_;
   char display_exit_key_;
+  double action_delay_secs_;
   ColorToUse color_to_use_;
   cv::VideoCapture cap_;
   InputDevice input_device_;

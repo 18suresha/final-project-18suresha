@@ -18,7 +18,8 @@ namespace mylibrary {
 
 Engine::Engine()
     : analyze_video_{false}, color_to_use_{ColorToUse_Blue}, cap_{0},
-      input_device_{}, prev_time_point_{std::chrono::system_clock::now()},
+      action_delay_secs_{0.5}, input_device_{},
+      prev_time_point_{std::chrono::system_clock::now()},
       cam_frame_size_{SetCamFrameSize()}, section_thresholds_{0, 0, 0, 0},
       section_dims_{Rect{}, Rect{}, Rect{}, Rect{}}, section_pixels_{0, 0, 0,
                                                                      0},
@@ -179,7 +180,7 @@ void Engine::StartFingerTracking() {
   }
   if (std::chrono::duration<double>(std::chrono::system_clock::now() -
                                     prev_time_point_)
-          .count() > 0.5) {
+          .count() > action_delay_secs_) {
     analyze_video_ = true;
   }
 }
