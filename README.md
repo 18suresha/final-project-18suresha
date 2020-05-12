@@ -45,7 +45,7 @@ Place something like this on your finger.
 ### Calibration
 If you change colors or the dimensions of your neutral zone, make sure to place your finger in the neutral zone and click `Actions` -> `Calibrate`. This might take a few seconds.
 ### Running Flick of the Wrist
-Once you choose your color and calibrate, you can click `Actions` -> `Run` and then switch to another winder such as Google Chrome to start using the application by moving your finger.
+Once you choose your color and calibrate, you can click `Actions` -> `Run` and then switch to another window such as Google Chrome to start using the application by moving your finger.
 
 ## Notes
 
